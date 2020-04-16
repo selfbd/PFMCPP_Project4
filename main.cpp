@@ -19,7 +19,7 @@ struct HeapA
 {
     A* a;
     HeapA() : a(new A) {}
-    ~HeapA() {a = nullptr;}    
+    ~HeapA() {delete a; a = nullptr;}    
 };
 
  /*
@@ -62,9 +62,6 @@ send me a DM to check your pull request
  Wait for my code review.
  */
 
-
-
-
 #include <iostream>
 #include <iomanip>
 #include <cmath>
@@ -74,7 +71,16 @@ send me a DM to check your pull request
 struct FloatType
 {
     const float epsilon = 0.00001f;
-    float* ownedFloat = nullptr;
+    float* ownedFloat = new float;
+
+    FloatType(float of) : ownedFloat(&of) {}
+    ~FloatType() {delete ownedFloat; ownedFloat = nullptr;}
+
+    void returnOwnedFloat()
+    {
+        std::cout << "ownedFloat: " << *ownedFloat << std::endl;
+    }
+
     float add( float lhs, float rhs );
     float subtract( float lhs, float rhs );
     float multiply( float lhs, float rhs );
@@ -110,12 +116,14 @@ float FloatType::divide( float lhs, float rhs )
 struct DoubleType
 {
     const double epsilon = 0.00001;
-    double* ownedDouble = nullptr;
+    double* ownedDouble = new double;
     double add( double lhs, double rhs );
     double subtract( double lhs, double rhs );
     double multiply( double lhs, double rhs );
     double divide( double lhs, double rhs );
 };
+
+//DoubleType() : ownedDouble(double* od) {}
 
 double DoubleType::add( double lhs, double rhs )
 {
@@ -146,12 +154,14 @@ double DoubleType::divide( double lhs, double rhs )
 struct IntType
 {
     const double epsilon = 0;
-    int* ownedInt = nullptr;
+    int* ownedInt = new int;
     int add( int lhs, int rhs );
     int subtract( int lhs, int rhs );
     int multiply( int lhs, int rhs );
     int divide( int lhs, int rhs );
 };
+
+//IntType() : ownedInt(int* oi) {}
 
 int IntType::add( int lhs, int rhs )
 {
@@ -188,15 +198,16 @@ int main()
 
     // ====================================================
 
-    FloatType ft1;
-    std::cout << "FloatType ft1\t : (3.2, 23.0)" << std::endl;
-    std::cout << "ft1.add()\t\t = " << ft1.add( 3.2f, 23.0f ) << std::endl;
-    std::cout << "ft1.subtract()\t = " << ft1.subtract( 3.2f, 23.0f ) << std::endl;
-    std::cout << "ft1.multiply()\t = " << ft1.multiply( 3.2f, 23.0f ) << std::endl;
-    std::cout << "ft1.divide()\t = " << ft1.divide( 3.2f, 23.0f ) << std::endl;
-    std::cout << std::endl;
+    FloatType ft1(1.6f);
+    ft1.returnOwnedFloat();
+    //std::cout << "FloatType ft1\t : (3.2, 23.0)" << std::endl;
+    //std::cout << "ft1.add()\t\t = " << ft1.add( 3.2f, 23.0f ) << std::endl;
+    //std::cout << "ft1.subtract()\t = " << ft1.subtract( 3.2f, 23.0f ) << std::endl;
+    //std::cout << "ft1.multiply()\t = " << ft1.multiply( 3.2f, 23.0f ) << std::endl;
+    //std::cout << "ft1.divide()\t = " << ft1.divide( 3.2f, 23.0f ) << std::endl;
+    //std::cout << std::endl;
 
-
+/*
     FloatType ft2;
     std::cout << "FloatType ft2\t : ( 98.6, -0.2 )" << std::endl;
     std::cout << "ft2.add()\t\t = " << ft2.add( 98.6f, -0.2f ) << std::endl;
@@ -313,6 +324,6 @@ int main()
     std::cout << "it5.divide()\t = " << it5.divide( 20, 0 ) << std::endl;
 
     // ====================================================
-
+*/
     std::cout << "good to go!" << std::endl;
 }
