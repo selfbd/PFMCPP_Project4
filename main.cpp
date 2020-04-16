@@ -14,15 +14,13 @@ New/This/Pointers/References conclusion
          on the heap without leaking, without using smart pointers. 
  */
 
-
-
-
-
-
-
-
-
-
+struct A {};
+struct HeapA
+{
+    A* a;
+    HeapA() : a(new A) {}
+    ~HeapA() {a = nullptr;}    
+};
 
  /*
  1) Edit your 3 structs so that they own a heap-allocated primitive type without using smart pointers  
