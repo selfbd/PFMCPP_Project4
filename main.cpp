@@ -74,7 +74,7 @@ send me a DM to check your pull request
 struct FloatType
 {
     const float epsilon = 0.00001f;
-    
+    float* ownedFloat = nullptr;
     float add( float lhs, float rhs );
     float subtract( float lhs, float rhs );
     float multiply( float lhs, float rhs );
@@ -110,7 +110,7 @@ float FloatType::divide( float lhs, float rhs )
 struct DoubleType
 {
     const double epsilon = 0.00001;
-
+    double* ownedDouble = nullptr;
     double add( double lhs, double rhs );
     double subtract( double lhs, double rhs );
     double multiply( double lhs, double rhs );
@@ -146,7 +146,7 @@ double DoubleType::divide( double lhs, double rhs )
 struct IntType
 {
     const double epsilon = 0;
-
+    int* ownedInt = nullptr;
     int add( int lhs, int rhs );
     int subtract( int lhs, int rhs );
     int multiply( int lhs, int rhs );
