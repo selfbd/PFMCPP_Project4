@@ -66,6 +66,11 @@ send me a DM to check your pull request
 #include <iomanip>
 #include <cmath>
 
+// Forward declarations
+struct FloatType;
+struct DoubleType;
+struct IntType;
+
 // ====================================================
 
 struct FloatType
@@ -76,73 +81,141 @@ struct FloatType
     FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
     ~FloatType() {delete ownedFloat; ownedFloat = nullptr;}
 
-    void returnOwnedFloat() {std::cout << "ownedFloat: " << *ownedFloat << std::endl;}
-    float add( float lhs, float rhs );
-    float subtract( float lhs, float rhs );
-    float multiply( float lhs, float rhs );
-    float divide( float lhs, float rhs );
+    FloatType& add(float rhs);
+    FloatType& subtract(float rhs);
+    FloatType& multiply(float rhs);
+    FloatType& divide(float rhs);
+
+    FloatType& add(const FloatType& rhs);
+    FloatType& subtract(const FloatType& rhs);
+    FloatType& multiply(const FloatType& rhs);
+    FloatType& divide(const FloatType& rhs);
+
+    FloatType& add(const DoubleType& rhs);
+    FloatType& subtract(const DoubleType& rhs);
+    FloatType& multiply(const DoubleType& rhs);
+    FloatType& divide(const DoubleType& rhs);
+
+    FloatType& add(const IntType& rhs);
+    FloatType& subtract(const IntType& rhs);
+    FloatType& multiply(const IntType& rhs);
+    FloatType& divide(const IntType& rhs);
 };
 
-float FloatType::add( float lhs, float rhs )
+FloatType& FloatType::add(float rhs)
 {
-    return lhs + rhs;
+    *ownedFloat += rhs;
+    return *this;
 }
 
-float FloatType::subtract( float lhs, float rhs )
+FloatType& FloatType::subtract(float rhs)
 {
-    return lhs - rhs;
+    *ownedFloat -= rhs;
+    return *this;
 }
 
-float FloatType::multiply( float lhs, float rhs )
+FloatType& FloatType::multiply(float rhs)
 {
-    return lhs * rhs;
+    *ownedFloat *= rhs;
+    return *this;
 }
 
 // Reference:
 // https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
-float FloatType::divide( float lhs, float rhs )
+FloatType& FloatType::divide(float rhs)
+{
+    if( std::abs(rhs - 0.0f) < epsilon)
+        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
+    *ownedFloat /= rhs;
+    return *this;
+}
+
+/*
+FloatType& FloatType::add(const float rhs)
+{
+    *ownedFloat += rhs;
+    return *ownedFloat;
+}
+
+FloatType& FloatType::subtract(const float rhs)
+{
+    *ownedFloat -= rhs;
+    return *ownedFloat
+}
+
+FloatType& FloatType::multiply(const float rhs)
+{
+    *ownedFloat += rhs;
+    return *ownedFloat
+}
+
+// Reference:
+// https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
+FloatType& FloatType::divide(FloatType& rhs)
 {
     if( std::abs(rhs - 0.0f) < epsilon )
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    return lhs / rhs;
+    *ownedFloat /= rhs;
+    return *ownedFloat
 }
-
+*/
 // ====================================================
 
 struct DoubleType
 {
     const double epsilon = 0.00001;
-    double* ownedDouble = new double;
-    double add( double lhs, double rhs );
-    double subtract( double lhs, double rhs );
-    double multiply( double lhs, double rhs );
-    double divide( double lhs, double rhs );
+    double* ownedDouble;
+
+    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
+    ~DoubleType() {delete ownedDouble; ownedDouble = nullptr;}
+
+    DoubleType& add(double rhs);
+    DoubleType& subtract(double rhs);
+    DoubleType& multiply(double rhs);
+    DoubleType& divide(double rhs);
+
+    DoubleType& add(const FloatType& rhs);
+    DoubleType& subtract(const FloatType& rhs);
+    DoubleType& multiply(const FloatType& rhs);
+    DoubleType& divide(const FloatType& rhs);
+
+    DoubleType& add(const DoubleType& rhs);
+    DoubleType& subtract(const DoubleType& rhs);
+    DoubleType& multiply(const DoubleType& rhs);
+    DoubleType& divide(const DoubleType& rhs);
+
+    DoubleType& add(const IntType& rhs);
+    DoubleType& subtract(const IntType& rhs);
+    DoubleType& multiply(const IntType& rhs);
+    DoubleType& divide(const IntType& rhs);
 };
 
-//DoubleType() : ownedDouble(double* od) {}
-
-double DoubleType::add( double lhs, double rhs )
+DoubleType& DoubleType::add(double rhs)
 {
-    return lhs + rhs;
+    *ownedDouble += rhs;
+    return *this;
 }
 
-double DoubleType::subtract( double lhs, double rhs )
+DoubleType& DoubleType::subtract(double rhs)
 {
-    return lhs - rhs;
+    *ownedDouble -= rhs;
+    return *this;
 }
 
-double DoubleType::multiply( double lhs, double rhs )
+DoubleType& DoubleType::multiply(double rhs)
 {
-    return lhs * rhs;
+    *ownedDouble *= rhs;
+    return *this;
 }
 
 // Reference:
 // https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
-double DoubleType::divide( double lhs, double rhs )
+DoubleType& DoubleType::divide(double rhs)
 {
-    if( fabs(rhs - 0.0) < epsilon )
+    if( fabs(rhs - 0.0) < epsilon)
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    return lhs / rhs;
+    *ownedDouble /= rhs;
+    return *this;
 }
 
 // ====================================================
@@ -150,40 +223,61 @@ double DoubleType::divide( double lhs, double rhs )
 struct IntType
 {
     const double epsilon = 0;
-    int* ownedInt = new int;
-    int add( int lhs, int rhs );
-    int subtract( int lhs, int rhs );
-    int multiply( int lhs, int rhs );
-    int divide( int lhs, int rhs );
+    int* ownedInt;
+
+    IntType(int intValue) : ownedInt(new int(intValue)) {}
+    ~IntType() {delete ownedInt; ownedInt = nullptr;}
+
+    IntType& add(int rhs);
+    IntType& subtract(int rhs);
+    IntType& multiply(int rhs);
+    IntType& divide(int rhs);
+
+    IntType& add(const FloatType& rhs);
+    IntType& subtract(const FloatType& rhs);
+    IntType& multiply(const FloatType& rhs);
+    IntType& divide(const FloatType& rhs);
+
+    IntType& add(const DoubleType& rhs);
+    IntType& subtract(const DoubleType& rhs);
+    IntType& multiply(const DoubleType& rhs);
+    IntType& divide(const DoubleType& rhs);
+
+    IntType& add(const IntType& rhs);
+    IntType& subtract(const IntType& rhs);
+    IntType& multiply(const IntType& rhs);
+    IntType& divide(const IntType& rhs);
 };
 
-//IntType() : ownedInt(int* oi) {}
-
-int IntType::add( int lhs, int rhs )
+IntType& IntType::add(int rhs)
 {
-    return lhs + rhs;
+    *ownedInt += rhs;
+    return *this;
 }
 
-int IntType::subtract( int lhs, int rhs )
+IntType& IntType::subtract(int rhs)
 {
-    return lhs - rhs;
+    *ownedInt -= rhs;
+    return *this;
 }
 
-int IntType::multiply( int lhs, int rhs )
+IntType& IntType::multiply(int rhs)
 {
-    return lhs * rhs;
+    *ownedInt *= rhs;
+    return *this;
 }
 
 // Reference:
 // https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
-int IntType::divide( int lhs, int rhs )
+IntType& IntType::divide(int rhs)
 {
-    if( std::abs(rhs - 0) <= epsilon )
+    if( std::abs(rhs - 0) <= epsilon)
     {
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-        return 0;
+        return *this;
     }
-    return lhs / rhs;
+    *ownedInt /= rhs;
+    return *this;
 }
 
 // ====================================================
@@ -194,13 +288,12 @@ int main()
 
     // ====================================================
 
-    FloatType ft1(1.6f);
-    ft1.returnOwnedFloat();
-    //std::cout << "FloatType ft1\t : (3.2, 23.0)" << std::endl;
-    //std::cout << "ft1.add()\t\t = " << ft1.add( 3.2f, 23.0f ) << std::endl;
-    //std::cout << "ft1.subtract()\t = " << ft1.subtract( 3.2f, 23.0f ) << std::endl;
-    //std::cout << "ft1.multiply()\t = " << ft1.multiply( 3.2f, 23.0f ) << std::endl;
-    //std::cout << "ft1.divide()\t = " << ft1.divide( 3.2f, 23.0f ) << std::endl;
+    FloatType ft(1.6f);
+    std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
+    //std::cout << "ft1.add()\t\t = " << ft1.add(23.0f) << std::endl;
+    //std::cout << "ft1.subtract()\t = " << *ft1.subtract(23.0f) << std::endl;
+    //std::cout << "ft1.multiply()\t = " << *ft1.multiply(23.0f) << std::endl;
+    //std::cout << "ft1.divide()\t = " << *ft1.divide(23.0f) << std::endl;
     //std::cout << std::endl;
 
 /*
@@ -321,5 +414,6 @@ int main()
 
     // ====================================================
 */
+    std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
 }
