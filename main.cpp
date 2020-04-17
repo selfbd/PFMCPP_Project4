@@ -71,7 +71,7 @@ struct FloatType;
 struct DoubleType;
 struct IntType;
 
-// ====================================================
+// FloatType - BEGIN ==================================
 
 struct FloatType
 {
@@ -102,6 +102,8 @@ struct FloatType
     FloatType& divide(const IntType& rhs);
 };
 
+// FloatType member functions with primitive parameters - BEGIN =============
+
 FloatType& FloatType::add(float rhs)
 {
     *ownedFloat += rhs;
@@ -130,36 +132,11 @@ FloatType& FloatType::divide(float rhs)
     return *this;
 }
 
-/*
-FloatType& FloatType::add(const float rhs)
-{
-    *ownedFloat += rhs;
-    return *ownedFloat;
-}
+// FloatType member functions with primitive parameters - END ===============
 
-FloatType& FloatType::subtract(const float rhs)
-{
-    *ownedFloat -= rhs;
-    return *ownedFloat
-}
+// FloatType - END ====================================
 
-FloatType& FloatType::multiply(const float rhs)
-{
-    *ownedFloat += rhs;
-    return *ownedFloat
-}
-
-// Reference:
-// https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
-FloatType& FloatType::divide(FloatType& rhs)
-{
-    if( std::abs(rhs - 0.0f) < epsilon )
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    *ownedFloat /= rhs;
-    return *ownedFloat
-}
-*/
-// ====================================================
+// DoubleType - BEGIN =================================
 
 struct DoubleType
 {
@@ -218,7 +195,9 @@ DoubleType& DoubleType::divide(double rhs)
     return *this;
 }
 
-// ====================================================
+// DoubleType - END ===================================
+
+// IntType - BEGIN  ===================================
 
 struct IntType
 {
@@ -280,7 +259,235 @@ IntType& IntType::divide(int rhs)
     return *this;
 }
 
-// ====================================================
+// IntType - END  =====================================
+
+// FloatType add member function with other UDTs as parameters - BEGIN =======
+
+FloatType& FloatType::add(const FloatType& ft)
+{
+    return add(*ft.ownedFloat);
+}
+
+FloatType& FloatType::add(const DoubleType& dt)
+{
+    return add(*dt.ownedDouble);
+}
+
+FloatType& FloatType::add(const IntType& it)
+{
+    return add(*it.ownedInt);
+}
+
+// FloatType add member function with other UDTs as parameters - END =========
+
+// FloatType subtract member function with other UDTs as parameters - BEGIN ==
+
+FloatType& FloatType::subtract(const FloatType& ft)
+{
+    return subtract(*ft.ownedFloat);
+}
+
+FloatType& FloatType::subtract(const DoubleType& dt)
+{
+    return subtract(*dt.ownedDouble);
+}
+
+FloatType& FloatType::subtract(const IntType& it)
+{
+    return subtract(*it.ownedInt);
+}
+
+// FloatType subtract member function with other UDTs as parameters - END ====
+
+// FloatType multiply member function with other UDTs as parameters - BEGIN ==
+
+FloatType& FloatType::multiply(const FloatType& ft)
+{
+    return multiply(*ft.ownedFloat);
+}
+
+FloatType& FloatType::multiply(const DoubleType& dt)
+{
+    return multiply(*dt.ownedDouble);
+}
+
+FloatType& FloatType::multiply(const IntType& it)
+{
+    return multiply(*it.ownedInt);
+}
+
+// FloatType multiply member function with other UDTs as parameters - END ====
+
+// FloatType divide member function with other UDTs as parameters - BEGIN ====
+
+FloatType& FloatType::divide(const FloatType& ft)
+{
+    return divide(*ft.ownedFloat);
+}
+
+FloatType& FloatType::divide(const DoubleType& dt)
+{
+    return divide(*dt.ownedDouble);
+}
+
+FloatType& FloatType::divide(const IntType& it)
+{
+    return divide(*it.ownedInt);
+}
+
+// FloatType divide member function with other UDTs as parameters - END ======
+
+// DoubleType add member function with other UDTs as parameters - BEGIN ======
+
+DoubleType& DoubleType::add(const FloatType& ft)
+{
+    return add(*ft.ownedFloat);
+}
+
+DoubleType& DoubleType::add(const DoubleType& dt)
+{
+    return add(*dt.ownedDouble);
+}
+
+DoubleType& DoubleType::add(const IntType& it)
+{
+    return add(*it.ownedInt);
+}
+
+// DoubleType add member function with other UDTs as parameters - END ========
+
+// DoubleType subtract member function with other UDTs as parameters - BEGIN =
+
+DoubleType& DoubleType::subtract(const FloatType& ft)
+{
+    return subtract(*ft.ownedFloat);
+}
+
+DoubleType& DoubleType::subtract(const DoubleType& dt)
+{
+    return subtract(*dt.ownedDouble);
+}
+
+DoubleType& DoubleType::subtract(const IntType& it)
+{
+    return subtract(*it.ownedInt);
+}
+
+// DoubleType subtract member function with other UDTs as parameters - END ===
+
+// DoubleType multiply member function with other UDTs as parameters - BEGIN =
+
+DoubleType& DoubleType::multiply(const FloatType& ft)
+{
+    return multiply(*ft.ownedFloat);
+}
+
+DoubleType& DoubleType::multiply(const DoubleType& dt)
+{
+    return multiply(*dt.ownedDouble);
+}
+
+DoubleType& DoubleType::multiply(const IntType& it)
+{
+    return multiply(*it.ownedInt);
+}
+
+// DoubleType multiply member function with other UDTs as parameters - END ===
+
+// DoubleType divide member function with other UDTs as parameters - BEGIN ===
+
+DoubleType& DoubleType::divide(const FloatType& ft)
+{
+    return divide(*ft.ownedFloat);
+}
+
+DoubleType& DoubleType::divide(const DoubleType& dt)
+{
+    return divide(*dt.ownedDouble);
+}
+
+DoubleType& DoubleType::divide(const IntType& it)
+{
+    return divide(*it.ownedInt);
+}
+
+// DoubleType divide member function with other UDTs as parameters - END =====
+
+// IntType add member function with other UDTs as parameters - BEGIN =========
+
+IntType& IntType::add(const FloatType& ft)
+{
+    return add(*ft.ownedFloat);
+}
+
+IntType& IntType::add(const DoubleType& dt)
+{
+    return add(*dt.ownedDouble);
+}
+
+IntType& IntType::add(const IntType& it)
+{
+    return add(*it.ownedInt);
+}
+
+// IntType add member function with other UDTs as parameters - END ===========
+
+// IntType subtract member function with other UDTs as parameters - BEGIN ====
+
+IntType& IntType::subtract(const FloatType& ft)
+{
+    return subtract(*ft.ownedFloat);
+}
+
+IntType& IntType::subtract(const DoubleType& dt)
+{
+    return subtract(*dt.ownedDouble);
+}
+
+IntType& IntType::subtract(const IntType& it)
+{
+    return subtract(*it.ownedInt);
+}
+
+// IntType subtract member function with other UDTs as parameters - END ======
+
+// IntType multiply member function with other UDTs as parameters - BEGIN ====
+
+IntType& IntType::multiply(const FloatType& ft)
+{
+    return multiply(*ft.ownedFloat);
+}
+
+IntType& IntType::multiply(const DoubleType& dt)
+{
+    return multiply(*dt.ownedDouble);
+}
+
+IntType& IntType::multiply(const IntType& it)
+{
+    return multiply(*it.ownedInt);
+}
+
+// IntType multiply member function with other UDTs as parameters - END ======
+
+// IntType divide member function with other UDTs as parameters - BEGIN ======
+
+IntType& IntType::divide(const FloatType& ft)
+{
+    return divide(*ft.ownedFloat);
+}
+
+IntType& IntType::divide(const DoubleType& dt)
+{
+    return divide(*dt.ownedDouble);
+}
+
+IntType& IntType::divide(const IntType& it)
+{
+    return divide(*it.ownedInt);
+}
+
+// IntType divide member function with other UDTs as parameters - END ========
 
 int main()
 {
