@@ -71,18 +71,12 @@ send me a DM to check your pull request
 struct FloatType
 {
     const float epsilon = 0.00001f;
-    float* ownedFloat = new float;
-    //float* ownedFloat = nullptr; // this doesn't work either, and I don't think it's correct because that is stack, not heap, right?
+    float* ownedFloat;
 
-    FloatType(float of) : ownedFloat(&of) {}
+    FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
     ~FloatType() {delete ownedFloat; ownedFloat = nullptr;}
 
-    void returnOwnedFloat()
-    {
-        std::cout << "ownedFloat [*(this->ownedFloat)]: " << *(this->ownedFloat) << std::endl;
-        std::cout << "ownedFloat [*ownedFloat]: " << *ownedFloat << std::endl;
-    }
-
+    void returnOwnedFloat() {std::cout << "ownedFloat: " << *ownedFloat << std::endl;}
     float add( float lhs, float rhs );
     float subtract( float lhs, float rhs );
     float multiply( float lhs, float rhs );
