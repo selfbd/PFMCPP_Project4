@@ -246,13 +246,12 @@ IntType& IntType::multiply(int rhs)
     return *this;
 }
 
-// Reference:
-// https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
 IntType& IntType::divide(int rhs)
 {
-    if( std::abs(rhs - 0) <= epsilon)
+    if(rhs == 0)
     {
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
+        *ownedInt = rhs;
         return *this;
     }
     *ownedInt /= rhs;
@@ -547,6 +546,11 @@ int main()
     std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
     std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
     std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "ft/0\t\t\t : " << *ft.divide(0).ownedFloat << std::endl;
+    std::cout << "dt/0\t\t\t : " << *dt.divide(0).ownedDouble << std::endl;
+    std::cout << "it/0\t\t\t : " << *it.divide(0).ownedInt << std::endl;
 
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
