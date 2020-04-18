@@ -491,136 +491,63 @@ IntType& IntType::divide(const IntType& it)
 
 int main()
 {
-    std::cout << std::endl;
-
-    // ====================================================
-
+    
     FloatType ft(1.6f);
+    DoubleType dt(0.81234);
+    IntType it(23);
+    std::cout << std::endl;
     std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
-    //std::cout << "ft1.add()\t\t = " << ft1.add(23.0f) << std::endl;
-    //std::cout << "ft1.subtract()\t = " << *ft1.subtract(23.0f) << std::endl;
-    //std::cout << "ft1.multiply()\t = " << *ft1.multiply(23.0f) << std::endl;
-    //std::cout << "ft1.divide()\t = " << *ft1.divide(23.0f) << std::endl;
-    //std::cout << std::endl;
+    std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
+    std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
 
-/*
-    FloatType ft2;
-    std::cout << "FloatType ft2\t : ( 98.6, -0.2 )" << std::endl;
-    std::cout << "ft2.add()\t\t = " << ft2.add( 98.6f, -0.2f ) << std::endl;
-    std::cout << "ft2.subtract()\t = " << ft2.subtract( 98.6f, -0.2f ) << std::endl;
-    std::cout << "ft2.multiply()\t = " << ft2.multiply( 98.6f, -0.2f ) << std::endl;
-    std::cout << "ft2.divide()\t = " << ft2.divide( 98.6f, -0.2f ) << std::endl;
     std::cout << std::endl;
+    std::cout << "ft/dt\t\t\t : " << *ft.ownedFloat / *dt.ownedDouble << std::endl;
+    std::cout << "(ft+dt)*10\t\t : " << *ft.add(dt).multiply(10).ownedFloat << std::endl;
+    std::cout << "(dt-it)*it\t\t : " << *dt.subtract(it).divide(it).ownedDouble << std::endl;
 
-    FloatType ft3;
-    std::cout << "FloatType ft3\t : ( -123456.78, -987.654 )" << std::endl;
-    std::cout << "ft3.add()\t\t = " << ft3.add( -123456.78f, -987.654f ) << std::endl;
-    std::cout << "ft3.subtract()\t = " << ft3.subtract( -123456.78f, -987.654f ) << std::endl;
-    std::cout << "ft3.multiply()\t = " << ft3.multiply( -123456.78f, -987.654f ) << std::endl;
-    std::cout << "ft3.divide()\t = " << ft3.divide( -123456.78f, -987.654f ) << std::endl;
+    *ft.ownedFloat = 0.f;
+    *dt.ownedDouble = 0.000987;
+    *it.ownedInt = 0;
     std::cout << std::endl;
+    std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
+    std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
+    std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
 
-    FloatType ft4;
-    std::cout << "FloatType ft4\t : ( 0.0, 3.14 )" << std::endl;
-    std::cout << "ft4.add()\t\t = " << ft4.add( 0.0f, 3.14f ) << std::endl;
-    std::cout << "ft4.subtract()\t = " << ft4.subtract( 0.0f, 3.14f ) << std::endl;
-    std::cout << "ft4.multiply()\t = " << ft4.multiply( 0.0f, 3.14f ) << std::endl;
-    std::cout << "ft4.divide()\t = " << ft4.divide( 0.0f, 3.14f ) << std::endl;
     std::cout << std::endl;
+    std::cout << "ft/dt\t\t\t : " << *ft.ownedFloat / *dt.ownedDouble << std::endl;
+    std::cout << "dt/ft\t\t\t : " << *dt.ownedDouble / *ft.ownedFloat << std::endl;
+    std::cout << "it*dt-12\t\t : " << *it.multiply(dt).subtract(12).ownedInt << std::endl;
 
-    FloatType ft5;
-    std::cout << "FloatType ft5\t : ( 3.14159, 0.0 )" << std::endl;
-    std::cout << "ft5.add()\t\t = " << ft5.add( 3.14159f, 0.0f ) << std::endl;
-    std::cout << "ft5.subtract()\t = " << ft5.subtract( 3.14159f, 0.0f ) << std::endl;
-    std::cout << "ft5.multiply()\t = " << ft5.multiply( 3.14159f, 0.0f ) << std::endl;
-    std::cout << "ft5.divide()\t = " << ft5.divide( 3.14159f, 0.0f ) << std::endl;
+    *ft.ownedFloat = 3.1f;
+    *dt.ownedDouble = 3.14159;
+    *it.ownedInt = 2;
     std::cout << std::endl;
+    std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
+    std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
+    std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
 
-    // ====================================================
-
-    DoubleType dt1;
-    std::cout << "DoubleType dt1\t : (3.2, 23.0)" << std::endl;
-    std::cout << "dt1.add()\t\t = " << dt1.add( 3.2, 23.0 ) << std::endl;
-    std::cout << "dt1.subtract()\t = " << dt1.subtract( 3.2, 23.0 ) << std::endl;
-    std::cout << "dt1.multiply()\t = " << dt1.multiply( 3.2, 23.0 ) << std::endl;
-    std::cout << "dt1.divide()\t = " << dt1.divide( 3.2, 23.0 ) << std::endl;
     std::cout << std::endl;
-
-    DoubleType dt2;
-    std::cout << "DoubleType dt2\t : (98.6, -0.2)" << std::endl;
-    std::cout << "dt2.add()\t\t = " << dt2.add( 98.6, -0.2 ) << std::endl;
-    std::cout << "dt2.subtract()\t = " << dt2.subtract( 98.6, -0.2 ) << std::endl;
-    std::cout << "dt2.multiply()\t = " << dt2.multiply( 98.6, -0.2 ) << std::endl;
-    std::cout << "dt2.divide()\t = " << dt2.divide( 98.6, -0.2 ) << std::endl;
+    std::cout << "ft*it-dt\t\t : " << *ft.multiply(it).subtract(dt).ownedFloat << std::endl;
+    
     std::cout << std::endl;
+    std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
+    std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
+    std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
 
-    DoubleType dt3;
-    std::cout << "DoubleType dt3\t : (-123456.78, -987.654)" << std::endl;
-    std::cout << "dt3.add()\t\t = " << dt3.add( -123456.78, -987.654 ) << std::endl;
-    std::cout << "dt3.subtract()\t = " << dt3.subtract( -123456.78, -987.654 ) << std::endl;
-    std::cout << "dt3.multiply()\t = " << dt3.multiply( -123456.78, -987.654 ) << std::endl;
-    std::cout << "dt3.divide()\t = " << dt3.divide( -123456.78, -987.654 ) << std::endl;
+    *ft.ownedFloat = 3.1f;
     std::cout << std::endl;
+    std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
+    std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
+    std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
 
-    DoubleType dt4;
-    std::cout << "DoubleType dt4\t : (0.0, 3.14159265359)" << std::endl;
-    std::cout << "dt4.add()\t\t = " << std::setprecision(12) << dt4.add( 0.0, 3.14159265359 ) << std::endl;
-    std::cout << "dt4.subtract()\t = " << dt4.subtract( 0.0, 3.14159265359 ) << std::endl;
-    std::cout << "dt4.multiply()\t = " << dt4.multiply( 0.0, 3.14159265359 ) << std::endl;
-    std::cout << "dt4.divide()\t = " << dt4.divide( 0.0, 3.14159265359 ) << std::endl;
     std::cout << std::endl;
+    std::cout << "ft*(it-dt)\t\t : " << *ft.ownedFloat * (*it.subtract(dt).ownedInt) << std::endl;
 
-    DoubleType dt5;
-    std::cout << "DoubleType dt5\t : (3.14159265359, 0.0)" << std::endl;
-    std::cout << "dt5.add()\t\t = " << std::setprecision(15) << dt5.add( 3.14159265359, 0.0 ) << std::endl;
-    std::cout << "dt5.subtract()\t = " << dt5.subtract( 3.14159265359, 0.0 ) << std::endl;
-    std::cout << "dt5.multiply()\t = " << dt5.multiply( 3.14159265359, 0.0) << std::endl;
-    std::cout << "dt5.divide()\t = " << dt5.divide( 3.14159265359, 0.0 ) << std::endl;
     std::cout << std::endl;
+    std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
+    std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
+    std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
 
-    // ====================================================
-
-    IntType it1;
-    std::cout << "IntType it1\t\t : (3, 23)" << std::endl;
-    std::cout << "it1.add()\t\t = " << it1.add( 3, 23 ) << std::endl;
-    std::cout << "it1.subtract()\t = " << it1.subtract( 3, 23 ) << std::endl;
-    std::cout << "it1.multiply()\t = " << it1.multiply( 3, 23 ) << std::endl;
-    std::cout << "it1.divide()\t = " << it1.divide( 3, 23 ) << std::endl;
-    std::cout << std::endl;
-
-    IntType it2;
-    std::cout << "IntType it2\t\t : (-12345678, -98)" << std::endl;
-    std::cout << "it2.add()\t\t = " << it2.add( -12345678, -98 ) << std::endl;
-    std::cout << "it2.subtract()\t = " << it2.subtract( -12345678, -98 ) << std::endl;
-    std::cout << "it2.multiply()\t = " << it2.multiply( -12345678, -98 ) << std::endl;
-    std::cout << "it2.divide()\t = " << it2.divide( -12345678, -98 ) << std::endl;
-    std::cout << std::endl;
-
-    IntType it3;
-    std::cout << "IntType it3\t\t : (20, -98)" << std::endl;
-    std::cout << "it3.add()\t\t = " << it3.add( 20, -98 ) << std::endl;
-    std::cout << "it3.subtract()\t = " << it3.subtract( 20, -98 ) << std::endl;
-    std::cout << "it3.multiply()\t = " << it3.multiply( 20, -98 ) << std::endl;
-    std::cout << "it3.divide()\t = " << it3.divide( 20, -98 ) << std::endl;
-    std::cout << std::endl;
-
-    IntType it4;
-    std::cout << "IntType it4\t\t : (-20, 98)" << std::endl;
-    std::cout << "it4.add()\t\t = " << it4.add( -20, 98 ) << std::endl;
-    std::cout << "it4.subtract()\t = " << it4.subtract( -20, 98 ) << std::endl;
-    std::cout << "it4.multiply()\t = " << it4.multiply( -20, 98 ) << std::endl;
-    std::cout << "it4.divide()\t = " << it4.divide( -20, 98 ) << std::endl;
-    std::cout << std::endl;
-
-    IntType it5;
-    std::cout << "IntType it5\t\t : (20, 0)" << std::endl;
-    std::cout << "it5.add()\t\t = " << it5.add( 20, 0 ) << std::endl;
-    std::cout << "it5.subtract()\t = " << it5.subtract( 20, 0 ) << std::endl;
-    std::cout << "it5.multiply()\t = " << it5.multiply( 20, 0 ) << std::endl;
-    std::cout << "it5.divide()\t = " << it5.divide( 20, 0 ) << std::endl;
-
-    // ====================================================
-*/
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
 }
