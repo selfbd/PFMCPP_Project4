@@ -250,8 +250,7 @@ IntType& IntType::divide(int rhs)
 {
     if(rhs == 0)
     {
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-        *ownedInt = rhs;
+        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation. Divide operation aborted. : ";
         return *this;
     }
     *ownedInt /= rhs;
