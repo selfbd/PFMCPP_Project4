@@ -54,7 +54,6 @@ struct IntType;
 struct FloatType
 {
     const float epsilon = 0.00001f;
-    float* ownedFloat;
 
     FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
     ~FloatType() {delete ownedFloat; ownedFloat = nullptr;}
@@ -63,6 +62,10 @@ struct FloatType
     FloatType& subtract(float rhs);
     FloatType& multiply(float rhs);
     FloatType& divide(float rhs);
+
+private:
+    float* ownedFloat;
+
 /*
     FloatType& add(const FloatType& rhs);
     FloatType& subtract(const FloatType& rhs);
@@ -120,16 +123,19 @@ FloatType& FloatType::divide(float rhs)
 struct DoubleType
 {
     const double epsilon = 0.00001;
-    double* ownedDouble;
 
     DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
     ~DoubleType() {delete ownedDouble; ownedDouble = nullptr;}
-/*
+
     DoubleType& add(double rhs);
     DoubleType& subtract(double rhs);
     DoubleType& multiply(double rhs);
     DoubleType& divide(double rhs);
 
+private:
+    double* ownedDouble;
+
+/*
     DoubleType& add(const FloatType& rhs);
     DoubleType& subtract(const FloatType& rhs);
     DoubleType& multiply(const FloatType& rhs);
@@ -182,7 +188,6 @@ DoubleType& DoubleType::divide(double rhs)
 struct IntType
 {
     const double epsilon = 0;
-    int* ownedInt;
 
     IntType(int intValue) : ownedInt(new int(intValue)) {}
     ~IntType() {delete ownedInt; ownedInt = nullptr;}
@@ -191,6 +196,10 @@ struct IntType
     IntType& subtract(int rhs);
     IntType& multiply(int rhs);
     IntType& divide(int rhs);
+    
+private:
+    int* ownedInt;
+
 /*
     IntType& add(const FloatType& rhs);
     IntType& subtract(const FloatType& rhs);
@@ -491,7 +500,7 @@ int main()
     *it.ownedInt = 0;
     std::cout << std::endl;
     std::cout << "FloatType ft\t : " << *ft.ownedFloat << std::endl;
-    std::cout << "DoubleType dt\t : " << *dt.ownedDouble << std::endl;
+    std::cout << "DoubleType dt\t : " << *dtErnest.ownedDouble << std::endl;
     std::cout << "IntType it\t\t : " << *it.ownedInt << std::endl;
 
     std::cout << std::endl;
