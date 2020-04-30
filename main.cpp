@@ -63,7 +63,7 @@ struct FloatType
     FloatType& subtract(float rhs);
     FloatType& multiply(float rhs);
     FloatType& divide(float rhs);
-
+/*
     FloatType& add(const FloatType& rhs);
     FloatType& subtract(const FloatType& rhs);
     FloatType& multiply(const FloatType& rhs);
@@ -78,6 +78,7 @@ struct FloatType
     FloatType& subtract(const IntType& rhs);
     FloatType& multiply(const IntType& rhs);
     FloatType& divide(const IntType& rhs);
+    */
 };
 
 // FloatType member functions with primitive parameters - BEGIN =============
@@ -123,7 +124,7 @@ struct DoubleType
 
     DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
     ~DoubleType() {delete ownedDouble; ownedDouble = nullptr;}
-
+/*
     DoubleType& add(double rhs);
     DoubleType& subtract(double rhs);
     DoubleType& multiply(double rhs);
@@ -143,6 +144,7 @@ struct DoubleType
     DoubleType& subtract(const IntType& rhs);
     DoubleType& multiply(const IntType& rhs);
     DoubleType& divide(const IntType& rhs);
+    */
 };
 
 DoubleType& DoubleType::add(double rhs)
@@ -189,7 +191,7 @@ struct IntType
     IntType& subtract(int rhs);
     IntType& multiply(int rhs);
     IntType& divide(int rhs);
-
+/*
     IntType& add(const FloatType& rhs);
     IntType& subtract(const FloatType& rhs);
     IntType& multiply(const FloatType& rhs);
@@ -204,6 +206,7 @@ struct IntType
     IntType& subtract(const IntType& rhs);
     IntType& multiply(const IntType& rhs);
     IntType& divide(const IntType& rhs);
+    */
 };
 
 IntType& IntType::add(int rhs)
@@ -237,6 +240,7 @@ IntType& IntType::divide(int rhs)
 
 // IntType - END  =====================================
 
+/*
 // FloatType add member function with other UDTs as parameters - BEGIN =======
 
 FloatType& FloatType::add(const FloatType& ft)
@@ -464,6 +468,7 @@ IntType& IntType::divide(const IntType& it)
 }
 
 // IntType divide member function with other UDTs as parameters - END ========
+*/
 
 int main()
 {
