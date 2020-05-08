@@ -69,11 +69,14 @@ private:
     float x{0}, y{0};
 };
 
-
-
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+
+// Forward declares for new UDT pow functions
+struct FloatType;
+struct DoubleType;
+struct IntType;
 
 // FloatType - BEGIN ==================================
 
@@ -85,14 +88,21 @@ struct FloatType
     ~FloatType() {delete ownedFloat; ownedFloat = nullptr;}
 
     operator float() { return *ownedFloat;}
+    operator float() const { return *ownedFloat; }
 
     FloatType& add(float rhs);
     FloatType& subtract(float rhs);
     FloatType& multiply(float rhs);
     FloatType& divide(float rhs);
 
+    FloatType& pow(float rhs);
+    FloatType& pow(const FloatType& rhs);
+    FloatType& pow(const DoubleType& rhs);
+    FloatType& pow(const IntType& rhs);
+
 private:
     float* ownedFloat;
+    FloatType& powInternal(const float value);
 };
 
 FloatType& FloatType::add(float rhs)
@@ -121,6 +131,32 @@ FloatType& FloatType::divide(float rhs)
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
     *ownedFloat /= rhs;
     return *this;
+}
+
+FloatType& FloatType::powInternal(const float value)
+{
+    // ToDo: implement power calculation
+    return *this;
+}
+
+FloatType& FloatType::pow(float rhs)
+{
+    return powInternal(rhs);
+}
+
+FloatType& FloatType::pow(const FloatType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
+
+FloatType& FloatType::pow(const DoubleType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
+
+FloatType& FloatType::pow(const IntType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
 }
 
 // FloatType - END ====================================
