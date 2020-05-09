@@ -372,6 +372,22 @@ int main()
      c) use the Point::toString() function to print out the results.
 */
 
+    FloatType ft1(1.6f);
+    DoubleType dt1(0.81234);
+    IntType it1(23);
+
+    std::cout << std::endl;
+    std::cout << "FloatType ft1\t : " << ft1 << std::endl;
+    std::cout << "DoubleType dt1\t : " << dt1 << std::endl;
+    std::cout << "IntType it1\t\t : " << it1 << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "ft1^2\t : " << ft1.pow(2) << std::endl;
+
+
+    
+    //std::cout << "dt1^0.5\t : " << dt1 << std::endl;
+    //std::cout << "IntType it1\t\t : " << it1 << std::endl;
 
 
     /*
