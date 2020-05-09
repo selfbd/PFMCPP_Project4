@@ -65,13 +65,6 @@ struct FloatType;
 struct DoubleType;
 struct IntType;
 
-/*
- 3) modify the Point class below to have Constructors that accept your UDTs.
-     a) make the Constructor's UDT arguments initialize the Point class's two member variables.
-     b) overload the multiply() function so it can accept each of your UDTs.  I've added an implementation you can mimick for this function.
-     c) add a toString() function to the Point class that prints out the x and y members via std::cout.
-*/
-
 struct Point
 {
     Point(float x_, float y_);
@@ -79,14 +72,15 @@ struct Point
     Point(DoubleType x_, DoubleType y_);
     Point(IntType x_, IntType y_);
 
-    Point& multiply(float m);
-    Point& multiply(FloatType m);
-    Point& multiply(DoubleType m);
-    Point& multiply(IntType m);
+    Point& multiply(const float m);
+    Point& multiply(const FloatType m);
+    Point& multiply(const DoubleType m);
+    Point& multiply(const IntType m);
     void toString();
 
 private:
     float x{0}, y{0};
+    Point& multiplyInternal(const float value);
 };
 
 // FloatType - BEGIN ==================================
@@ -349,33 +343,20 @@ Point::Point(FloatType x_, FloatType y_) : x(static_cast<float>(x_)), y(static_c
 Point::Point(DoubleType x_, DoubleType y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
 Point::Point(IntType x_, IntType y_) : x(static_cast<int>(x_)), y(static_cast<int>(y_)) {}
 
-Point& Point::multiply(float m)
+Point& Point::multiplyInternal(const float m)
 {
     x *= m;
     y *= m;
     return *this;
 }
 
-Point& Point::multiply(FloatType m)
-{
-    x *= static_cast<float>(m);
-    y *= static_cast<float>(m);
-    return *this;
-}
+Point& Point::multiply(const float m) { return multiplyInternal(m); }
 
-Point& Point::multiply(DoubleType m)
-{
-    x *= static_cast<float>(m);
-    y *= static_cast<float>(m);
-    return *this;
-}
+Point& Point::multiply(const FloatType m) { return multiplyInternal(static_cast<float>(m)); }
 
-Point& Point::multiply(IntType m)
-{
-    x *= static_cast<float>(m);
-    y *= static_cast<float>(m);
-    return *this;
-}
+Point& Point::multiply(DoubleType m) { return multiplyInternal(static_cast<float>(m)); }
+
+Point& Point::multiply(IntType m) { return multiplyInternal(static_cast<float>(m)); }
 
 void Point::toString() { std::cout << "Point (x,y) = " << x << "," << y << ")" << std::endl; }
 
@@ -383,6 +364,19 @@ void Point::toString() { std::cout << "Point (x,y) = " << x << "," << y << ")" <
 
 int main()
 {
+
+/*
+ 4) Add to main()
+     a) use your new pow() function in main for all of your types and print out the results.
+     b) use the Point class in main and multiply some Point instances with your UDTs
+     c) use the Point::toString() function to print out the results.
+*/
+
+
+
+    /*
+    Previous assignments - BEGIN 
+
     FloatType ft1(1.6f);
     DoubleType dt1(0.81234);
     IntType it1(23);
@@ -434,7 +428,9 @@ int main()
     std::cout << "ft3/0\t\t\t : " << ft3.divide(0) << std::endl;
     std::cout << "dt3/0\t\t\t : " << dt3.divide(0) << std::endl;
     std::cout << "it3/0\t\t\t : " << it3.divide(0) << std::endl;
-
+    
+    Previous assignments - END 
+    */
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
 }
