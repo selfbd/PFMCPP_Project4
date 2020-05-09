@@ -86,6 +86,7 @@ struct FloatType
 
     FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
     ~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
+    FloatType& operator=(const FloatType&);
 
     operator float() { return *ownedFloat;}
     operator float() const { return *ownedFloat; }
@@ -135,7 +136,7 @@ FloatType& FloatType::divide(float rhs)
 
 FloatType& FloatType::powInternal(const float value)
 {
-    // ToDo: implement power calculation
+    *this = std::pow(*this, value);
     return *this;
 }
 
@@ -156,7 +157,7 @@ FloatType& FloatType::pow(const DoubleType& rhs)
 
 FloatType& FloatType::pow(const IntType& rhs)
 {
-    return powInternal(static_cast<float>(rhs));
+    return static_cast<float>(powInternal(static_cast<float>(rhs)));
 }
 
 // FloatType - END ====================================
@@ -169,6 +170,7 @@ struct DoubleType
 
     DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
     ~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
+    DoubleType& operator=(const DoubleType&);
 
     operator double() { return *ownedDouble; }
     operator double() const { return *ownedDouble; }
@@ -218,7 +220,7 @@ DoubleType& DoubleType::divide(double rhs)
 
 DoubleType& DoubleType::powInternal(const double value)
 {
-    // ToDo: implement power calculation
+    *this = std::pow(*this, value);
     return *this;
 }
 
@@ -252,6 +254,7 @@ struct IntType
 
     IntType(int intValue) : ownedInt(new int(intValue)) {}
     ~IntType() { delete ownedInt; ownedInt = nullptr; }
+    IntType& operator=(const IntType&);
 
     operator int() { return *ownedInt; }
     operator int() const { return *ownedInt; }
@@ -302,7 +305,7 @@ IntType& IntType::divide(int rhs)
 
 IntType& IntType::powInternal(const int value)
 {
-    // ToDo: implement power calculation
+    *this = static_cast<int>(std::pow(static_cast<int>(*this), static_cast<int>(value)));
     return *this;
 }
 
