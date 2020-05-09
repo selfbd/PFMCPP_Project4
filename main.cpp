@@ -80,13 +80,11 @@ struct Point
     Point(IntType x_, IntType y_);
 
     Point& multiply(float m);
-/*
-    {
-        x *= m;
-        y *= m;
-        return *this;
-    }
-*/
+    Point& multiply(FloatType m);
+    Point& multiply(DoubleType m);
+    Point& multiply(IntType m);
+    void toString();
+
 private:
     float x{0}, y{0};
 };
@@ -357,6 +355,29 @@ Point& Point::multiply(float m)
     y *= m;
     return *this;
 }
+
+Point& Point::multiply(FloatType m)
+{
+    x *= static_cast<float>(m);
+    y *= static_cast<float>(m);
+    return *this;
+}
+
+Point& Point::multiply(DoubleType m)
+{
+    x *= static_cast<float>(m);
+    y *= static_cast<float>(m);
+    return *this;
+}
+
+Point& Point::multiply(IntType m)
+{
+    x *= static_cast<float>(m);
+    y *= static_cast<float>(m);
+    return *this;
+}
+
+void Point::toString() { std::cout << "Point (x,y) = " << x << "," << y << ")" << std::endl; }
 
 // Point Implementations - END ========================
 
