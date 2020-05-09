@@ -65,6 +65,8 @@ struct FloatType;
 struct DoubleType;
 struct IntType;
 
+// Type Declarations - BEGIN ==========================
+
 struct Point
 {
     Point(float x_, float y_);
@@ -83,12 +85,8 @@ private:
     Point& multiplyInternal(const float value);
 };
 
-// FloatType - BEGIN ==================================
-
 struct FloatType
 {
-    const float epsilon = 0.00001f;
-
     FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
     ~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
     FloatType& operator=(const FloatType&);
@@ -111,69 +109,8 @@ private:
     FloatType& powInternal(const float value);
 };
 
-FloatType& FloatType::add(float rhs)
-{
-    *ownedFloat += rhs;
-    return *this;
-}
-
-FloatType& FloatType::subtract(float rhs)
-{
-    *ownedFloat -= rhs;
-    return *this;
-}
-
-FloatType& FloatType::multiply(float rhs)
-{
-    *ownedFloat *= rhs;
-    return *this;
-}
-
-// Reference:
-// https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
-FloatType& FloatType::divide(float rhs)
-{
-    if( std::abs(rhs - 0.0f) < epsilon)
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    *ownedFloat /= rhs;
-    return *this;
-}
-
-FloatType& FloatType::powInternal(const float value)
-{
-    *this = std::pow(*this, value);
-    return *this;
-}
-
-FloatType& FloatType::pow(float rhs)
-{
-    return powInternal(rhs);
-}
-
-FloatType& FloatType::pow(const FloatType& rhs)
-{
-    return powInternal(static_cast<float>(rhs));
-}
-
-FloatType& FloatType::pow(const DoubleType& rhs)
-{
-    return powInternal(static_cast<float>(rhs));
-}
-
-FloatType& FloatType::pow(const IntType& rhs)
-{
-    return static_cast<float>(powInternal(static_cast<float>(rhs)));
-}
-
-// FloatType - END ====================================
-
-// DoubleType - BEGIN =================================
-
 struct DoubleType
-{
-    const double epsilon = 0.00001;
-
-    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
+{    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
     ~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
     DoubleType& operator=(const DoubleType&);
 
@@ -195,6 +132,90 @@ private:
     DoubleType& powInternal(const double value);
 };
 
+struct IntType
+{
+    IntType(int intValue) : ownedInt(new int(intValue)) {}
+    ~IntType() { delete ownedInt; ownedInt = nullptr; }
+    IntType& operator=(const IntType&);
+
+    operator int() { return *ownedInt; }
+    operator int() const { return *ownedInt; }
+
+    IntType& add(int rhs);
+    IntType& subtract(int rhs);
+    IntType& multiply(int rhs);
+    IntType& divide(int rhs);
+
+    IntType& pow(int rhs);
+    IntType& pow(const FloatType& rhs);
+    IntType& pow(const DoubleType& rhs);
+    IntType& pow(const IntType& rhs);
+
+private:
+    int* ownedInt;
+    IntType& powInternal(const int value);
+};
+
+// Type Declarations - END ============================
+
+// FloatType Implementations - BEGIN ==================
+
+FloatType& FloatType::add(float rhs)
+{
+    *ownedFloat += rhs;
+    return *this;
+}
+
+FloatType& FloatType::subtract(float rhs)
+{
+    *ownedFloat -= rhs;
+    return *this;
+}
+
+FloatType& FloatType::multiply(float rhs)
+{
+    *ownedFloat *= rhs;
+    return *this;
+}
+
+FloatType& FloatType::divide(float rhs)
+{
+    if( std::abs(rhs - 0.0f) < 0.00001f)
+        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
+    *ownedFloat /= rhs;
+    return *this;
+}
+
+FloatType& FloatType::powInternal(const float value)
+{
+    *ownedFloat = std::pow(*ownedFloat, value);
+    return *this;
+}
+
+FloatType& FloatType::pow(float rhs)
+{
+    return powInternal(rhs);
+}
+
+FloatType& FloatType::pow(const FloatType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
+
+FloatType& FloatType::pow(const DoubleType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
+
+FloatType& FloatType::pow(const IntType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
+
+// FloatType Implementations - END ====================
+
+// DoubleType Implementations - BEGIN =================
+
 DoubleType& DoubleType::add(double rhs)
 {
     *ownedDouble += rhs;
@@ -213,11 +234,9 @@ DoubleType& DoubleType::multiply(double rhs)
     return *this;
 }
 
-// Reference:
-// https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
 DoubleType& DoubleType::divide(double rhs)
 {
-    if( fabs(rhs - 0.0) < epsilon)
+    if( fabs(rhs - 0.0) < 0.00001)
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
     *ownedDouble /= rhs;
     return *this;
@@ -225,7 +244,7 @@ DoubleType& DoubleType::divide(double rhs)
 
 DoubleType& DoubleType::powInternal(const double value)
 {
-    *this = std::pow(*this, value);
+    *ownedDouble = std::pow(*ownedDouble, value);
     return *this;
 }
 
@@ -249,35 +268,9 @@ DoubleType& DoubleType::pow(const IntType& rhs)
     return powInternal(static_cast<double>(rhs));
 }
 
-// DoubleType - END ===================================
+// DoubleType Implementations - END ===================
 
-// IntType - BEGIN  ===================================
-
-struct IntType
-{
-    const double epsilon = 0;
-
-    IntType(int intValue) : ownedInt(new int(intValue)) {}
-    ~IntType() { delete ownedInt; ownedInt = nullptr; }
-    IntType& operator=(const IntType&);
-
-    operator int() { return *ownedInt; }
-    operator int() const { return *ownedInt; }
-
-    IntType& add(int rhs);
-    IntType& subtract(int rhs);
-    IntType& multiply(int rhs);
-    IntType& divide(int rhs);
-
-    IntType& pow(int rhs);
-    IntType& pow(const FloatType& rhs);
-    IntType& pow(const DoubleType& rhs);
-    IntType& pow(const IntType& rhs);
-
-private:
-    int* ownedInt;
-    IntType& powInternal(const int value);
-};
+// IntType Implementations - BEGIN ====================
 
 IntType& IntType::add(int rhs)
 {
@@ -310,7 +303,7 @@ IntType& IntType::divide(int rhs)
 
 IntType& IntType::powInternal(const int value)
 {
-    *this = static_cast<int>(std::pow(static_cast<int>(*this), static_cast<int>(value)));
+    *ownedInt = static_cast<int>(std::pow(*ownedInt, value));
     return *this;
 }
 
@@ -334,7 +327,7 @@ IntType& IntType::pow(const IntType& rhs)
     return powInternal(static_cast<int>(rhs));
 }
 
-// IntType - END  =====================================
+// IntType Implementations - END ======================
 
 // Point Implementations - BEGIN ======================
 
