@@ -85,7 +85,7 @@ struct FloatType
     const float epsilon = 0.00001f;
 
     FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
-    ~FloatType() {delete ownedFloat; ownedFloat = nullptr;}
+    ~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
 
     operator float() { return *ownedFloat;}
     operator float() const { return *ownedFloat; }
@@ -168,17 +168,24 @@ struct DoubleType
     const double epsilon = 0.00001;
 
     DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
-    ~DoubleType() {delete ownedDouble; ownedDouble = nullptr;}
+    ~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
 
-    operator double() { return *ownedDouble;}
+    operator double() { return *ownedDouble; }
+    operator double() const { return *ownedDouble; }
 
     DoubleType& add(double rhs);
     DoubleType& subtract(double rhs);
     DoubleType& multiply(double rhs);
     DoubleType& divide(double rhs);
 
+    DoubleType& pow(double rhs);
+    DoubleType& pow(const FloatType& rhs);
+    DoubleType& pow(const DoubleType& rhs);
+    DoubleType& pow(const IntType& rhs);
+
 private:
     double* ownedDouble;
+    DoubleType& powInternal(const double value);
 };
 
 DoubleType& DoubleType::add(double rhs)
@@ -209,6 +216,32 @@ DoubleType& DoubleType::divide(double rhs)
     return *this;
 }
 
+DoubleType& DoubleType::powInternal(const double value)
+{
+    // ToDo: implement power calculation
+    return *this;
+}
+
+DoubleType& DoubleType::pow(double rhs)
+{
+    return powInternal(rhs);
+}
+
+DoubleType& DoubleType::pow(const FloatType& rhs)
+{
+    return powInternal(static_cast<double>(rhs));
+}
+
+DoubleType& DoubleType::pow(const DoubleType& rhs)
+{
+    return powInternal(static_cast<double>(rhs));
+}
+
+DoubleType& DoubleType::pow(const IntType& rhs)
+{
+    return powInternal(static_cast<double>(rhs));
+}
+
 // DoubleType - END ===================================
 
 // IntType - BEGIN  ===================================
@@ -218,17 +251,24 @@ struct IntType
     const double epsilon = 0;
 
     IntType(int intValue) : ownedInt(new int(intValue)) {}
-    ~IntType() {delete ownedInt; ownedInt = nullptr;}
+    ~IntType() { delete ownedInt; ownedInt = nullptr; }
 
-    operator int() { return *ownedInt;}
+    operator int() { return *ownedInt; }
+    operator int() const { return *ownedInt; }
 
     IntType& add(int rhs);
     IntType& subtract(int rhs);
     IntType& multiply(int rhs);
     IntType& divide(int rhs);
 
+    IntType& pow(int rhs);
+    IntType& pow(const FloatType& rhs);
+    IntType& pow(const DoubleType& rhs);
+    IntType& pow(const IntType& rhs);
+
 private:
     int* ownedInt;
+    IntType& powInternal(const int value);
 };
 
 IntType& IntType::add(int rhs)
@@ -258,6 +298,32 @@ IntType& IntType::divide(int rhs)
     }
     *ownedInt /= rhs;
     return *this;
+}
+
+IntType& IntType::powInternal(const int value)
+{
+    // ToDo: implement power calculation
+    return *this;
+}
+
+IntType& IntType::pow(int rhs)
+{
+    return powInternal(rhs);
+}
+
+IntType& IntType::pow(const FloatType& rhs)
+{
+    return powInternal(static_cast<int>(rhs));
+}
+
+IntType& IntType::pow(const DoubleType& rhs)
+{
+    return powInternal(static_cast<int>(rhs));
+}
+
+IntType& IntType::pow(const IntType& rhs)
+{
+    return powInternal(static_cast<int>(rhs));
 }
 
 // IntType - END  =====================================
