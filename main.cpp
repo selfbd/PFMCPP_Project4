@@ -57,26 +57,39 @@ send me a DM to check your pull request
  Wait for my code review.
  */
 
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+
+struct FloatType;
+struct DoubleType;
+struct IntType;
+
+/*
+ 3) modify the Point class below to have Constructors that accept your UDTs.
+     a) make the Constructor's UDT arguments initialize the Point class's two member variables.
+     b) overload the multiply() function so it can accept each of your UDTs.  I've added an implementation you can mimick for this function.
+     c) add a toString() function to the Point class that prints out the x and y members via std::cout.
+*/
+
 struct Point
 {
-    Point& multiply(float m)
+    Point(float x_, float y_);
+    Point(FloatType x_, FloatType y_);
+    Point(DoubleType x_, DoubleType y_);
+    Point(IntType x_, IntType y_);
+
+    Point& multiply(float m);
+/*
     {
         x *= m;
         y *= m;
         return *this;
     }
+*/
 private:
     float x{0}, y{0};
 };
-
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-
-// Forward declares for new UDT pow functions
-struct FloatType;
-struct DoubleType;
-struct IntType;
 
 // FloatType - BEGIN ==================================
 
@@ -330,6 +343,22 @@ IntType& IntType::pow(const IntType& rhs)
 }
 
 // IntType - END  =====================================
+
+// Point Implementations - BEGIN ======================
+
+Point::Point(float x_, float y_) : x(x_), y(y_) {}
+Point::Point(FloatType x_, FloatType y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
+Point::Point(DoubleType x_, DoubleType y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
+Point::Point(IntType x_, IntType y_) : x(static_cast<int>(x_)), y(static_cast<int>(y_)) {}
+
+Point& Point::multiply(float m)
+{
+    x *= m;
+    y *= m;
+    return *this;
+}
+
+// Point Implementations - END ========================
 
 int main()
 {
