@@ -365,22 +365,36 @@ int main()
      c) use the Point::toString() function to print out the results.
 */
 
-    FloatType ft1(1.6f);
-    DoubleType dt1(0.81234);
-    IntType it1(23);
+    
+    FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
+    DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
+    IntType it1(3), it2(2);
 
+    std::cout << std::endl;
+    std::cout << "Tests - pow" << std::endl;
+    std::cout << "-----------" << std::endl;
     std::cout << std::endl;
     std::cout << "FloatType ft1\t : " << ft1 << std::endl;
+    std::cout << "FloatType ft2\t : " << ft2 << std::endl;
+    std::cout << "FloatType ft3\t : " << ft3 << std::endl;
+    std::cout << "FloatType ft4\t : " << ft4 << std::endl;
     std::cout << "DoubleType dt1\t : " << dt1 << std::endl;
+    std::cout << "DoubleType dt2\t : " << dt2 << std::endl;
+    std::cout << "DoubleType dt3\t : " << dt3 << std::endl;
     std::cout << "IntType it1\t\t : " << it1 << std::endl;
+    std::cout << "IntType it2\t\t : " << it2 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft1^2\t : " << ft1.pow(2) << std::endl;
-
-
-    
-    //std::cout << "dt1^0.5\t : " << dt1 << std::endl;
-    //std::cout << "IntType it1\t\t : " << it1 << std::endl;
+    std::cout << "(ft1)^2\t\t\t : " << ft1.pow(2) << std::endl;
+    std::cout << "(ft2)^0.5\t\t : " << ft2.pow(0.5) << std::endl;
+    std::cout << "(ft3)^2.0\t\t : " << ft3.pow(2.f) << std::endl;
+    std::cout << "(ft4)^0\t\t\t : " << ft4.pow(0) << std::endl;
+    std::cout << "(dt1)^0.5\t\t : " << dt1.pow(0.5) << std::endl;
+    std::cout << "((dt2)^0.5)^2\t : " << dt2.pow(0.5).pow(2) << std::endl;
+    std::cout << "(dt3)^0\t\t\t : " << dt3.pow(0) << std::endl;
+    std::cout << "((dt3)^0)^0.5\t : " << dt3.pow(0).pow(0.5) << std::endl;
+    std::cout << "(it1)^3\t\t\t : " << it1.pow(3) << std::endl;
+    std::cout << "((it2)^12)^2\t : " << it2.pow(12).pow(2) << std::endl;
 
 
     /*
