@@ -70,19 +70,24 @@ struct IntType;
 struct Point
 {
     Point(float x_, float y_);
-    Point(FloatType x_, FloatType y_);
-    Point(DoubleType x_, DoubleType y_);
-    Point(IntType x_, IntType y_);
+    Point(const FloatType& x_, const FloatType& y_);
+    Point(const DoubleType& x_, const DoubleType& y_);
+    Point(const IntType& x_, const IntType& y_);
 
-    Point& multiply(const float m);
-    Point& multiply(const FloatType m);
-    Point& multiply(const DoubleType m);
-    Point& multiply(const IntType m);
+    Point& multiply(float m)
+    {
+        x *= m;
+        y *= m;
+        return *this;
+    }
+    
+    Point& multiply(const FloatType& ft);
+    Point& multiply(const DoubleType& dt);
+    Point& multiply(const IntType& it);
     void toString();
 
 private:
     float x{0}, y{0};
-    Point& multiplyInternal(const float value);
 };
 
 struct FloatType
@@ -332,26 +337,26 @@ IntType& IntType::pow(const IntType& rhs)
 // Point Implementations - BEGIN ======================
 
 Point::Point(float x_, float y_) : x(x_), y(y_) {}
-Point::Point(FloatType x_, FloatType y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
-Point::Point(DoubleType x_, DoubleType y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
-Point::Point(IntType x_, IntType y_) : x(static_cast<int>(x_)), y(static_cast<int>(y_)) {}
+Point::Point(const FloatType& x_, const FloatType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
+Point::Point(const DoubleType& x_, const DoubleType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
+Point::Point(const IntType& x_, const IntType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
 
-Point& Point::multiplyInternal(const float m)
+Point& Point::multiply(const FloatType& ft)
 {
-    x *= m;
-    y *= m;
-    return *this;
+    return multiply(static_cast<float>(ft));
 }
 
-Point& Point::multiply(const float m) { return multiplyInternal(m); }
+Point& Point::multiply(const DoubleType& dt)
+{
+    return multiply(static_cast<float>(dt));
+}
 
-Point& Point::multiply(const FloatType m) { return multiplyInternal(static_cast<float>(m)); }
+Point& Point::multiply(const IntType& it)
+{
+    return multiply(static_cast<float>(it));
+}
 
-Point& Point::multiply(DoubleType m) { return multiplyInternal(static_cast<float>(m)); }
-
-Point& Point::multiply(IntType m) { return multiplyInternal(static_cast<float>(m)); }
-
-void Point::toString() { std::cout << "Point (x,y) = " << x << "," << y << ")" << std::endl; }
+void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::endl; }
 
 // Point Implementations - END ========================
 
@@ -396,9 +401,65 @@ int main()
     std::cout << "(it1)^3\t\t\t : " << it1.pow(3) << std::endl;
     std::cout << "((it2)^12)^2\t : " << it2.pow(12).pow(2) << std::endl;
 
+    std::cout << std::endl;
+    std::cout << "Tests - Point" << std::endl;
+    std::cout << "-------------" << std::endl;
+
+    Point p1(0.f, 0.f), p1f(0.f, 0.f), p1ft(0.f, 0.f), p1dt(0.f, 0.f), p1it(0.f, 0.f);
+    Point p2(9.5f, 2.6f), p2f(9.5f, 2.6f), p2ft(9.5f, 2.6f), p2dt(9.5f, 2.6f), p2it(9.5f, 2.6f);
+    Point p3(100.f, 10.f), p3f(100.f, 10.f), p3ft(100.f, 10.f), p3dt(100.f, 10.f), p3it(100.f, 10.f);
+
+    FloatType ft(1.6f);
+    DoubleType dt(0.81234);
+    IntType it(7);
+
+    std::cout << std::endl;
+
+    std::cout << "f multipier\t\t : " << "5" << std::endl;
+    std::cout << "ft multiplier\t : " << ft << std::endl;
+    std::cout << "dt multiplier\t : " << dt << std::endl;
+    std::cout << "it multiplier\t : " << it << std::endl;
+
+    // Point:: multiply with p1
+    std::cout << std::endl;
+    std::cout << "p1\t\t\t\t";
+    p1.toString();
+    std::cout << "p1 * f\t\t\t";
+    p1f.multiply(5.f);
+    p1f.toString();
+    std::cout << "p1 * ft\t\t\t";
+    p1ft.multiply(ft);
+    p1ft.toString();
+    std::cout << "p1 * dt\t\t\t";
+    p1dt.multiply(dt);
+    p1dt.toString();
+    std::cout << "p1 * it\t\t\t";
+    p1it.multiply(it);
+    p1it.toString();
+
+    // Point:: multiply with p2
+    std::cout << std::endl;
+    std::cout << "p2\t\t\t\t";
+    p2.toString();
+    std::cout << "p2 * f\t\t\t";
+    p2f.multiply(5.f);
+    p2f.toString();
+    std::cout << "p2 * ft\t\t\t";
+    p2ft.multiply(ft);
+    p2ft.toString();
+    std::cout << "p2 * dt\t\t\t";
+    p2dt.multiply(dt);
+    p2dt.toString();
+    std::cout << "p2 * it\t\t\t";
+    p2it.multiply(it);
+    p2it.toString();
+
+
+    std::cout << std::endl;
+    std::cout << "good to go!" << std::endl;
 
     /*
-    Previous assignments - BEGIN 
+    Tests from Previous assignments - BEGIN 
 
     FloatType ft1(1.6f);
     DoubleType dt1(0.81234);
@@ -452,8 +513,6 @@ int main()
     std::cout << "dt3/0\t\t\t : " << dt3.divide(0) << std::endl;
     std::cout << "it3/0\t\t\t : " << it3.divide(0) << std::endl;
     
-    Previous assignments - END 
+    Tests from  - END 
     */
-    std::cout << std::endl;
-    std::cout << "good to go!" << std::endl;
 }
