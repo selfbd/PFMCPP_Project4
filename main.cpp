@@ -115,7 +115,8 @@ private:
 };
 
 struct DoubleType
-{    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
+{    
+    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
     ~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
     DoubleType& operator=(const DoubleType&);
 
@@ -362,14 +363,6 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
 
 int main()
 {
-
-/*
- 4) Add to main()
-     a) use your new pow() function in main for all of your types and print out the results.
-     b) use the Point class in main and multiply some Point instances with your UDTs
-     c) use the Point::toString() function to print out the results.
-*/
-
     
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
@@ -454,12 +447,28 @@ int main()
     p2it.multiply(it);
     p2it.toString();
 
+    // Point:: multiply with p3
+    std::cout << std::endl;
+    std::cout << "p3\t\t\t\t";
+    p3.toString();
+    std::cout << "p3 * f\t\t\t";
+    p3f.multiply(5.f);
+    p3f.toString();
+    std::cout << "p3 * ft\t\t\t";
+    p3ft.multiply(ft);
+    p3ft.toString();
+    std::cout << "p3 * dt\t\t\t";
+    p3dt.multiply(dt);
+    p3dt.toString();
+    std::cout << "p3 * it\t\t\t";
+    p3it.multiply(it);
+    p3it.toString();
 
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
 
     /*
-    Tests from Previous assignments - BEGIN 
+    Tests from project4 parts - BEGIN 
 
     FloatType ft1(1.6f);
     DoubleType dt1(0.81234);
@@ -513,6 +522,6 @@ int main()
     std::cout << "dt3/0\t\t\t : " << dt3.divide(0) << std::endl;
     std::cout << "it3/0\t\t\t : " << it3.divide(0) << std::endl;
     
-    Tests from  - END 
+    Tests from project4 parts - END 
     */
 }
