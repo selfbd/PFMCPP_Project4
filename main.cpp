@@ -96,7 +96,6 @@ struct FloatType
     ~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
     FloatType& operator=(const FloatType&);
 
-    operator float() { return *ownedFloat;}
     operator float() const { return *ownedFloat; }
 
     FloatType& add(float rhs);
@@ -120,7 +119,6 @@ struct DoubleType
     ~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
     DoubleType& operator=(const DoubleType&);
 
-    operator double() { return *ownedDouble; }
     operator double() const { return *ownedDouble; }
 
     DoubleType& add(double rhs);
@@ -144,7 +142,6 @@ struct IntType
     ~IntType() { delete ownedInt; ownedInt = nullptr; }
     IntType& operator=(const IntType&);
 
-    operator int() { return *ownedInt; }
     operator int() const { return *ownedInt; }
 
     IntType& add(int rhs);
@@ -363,7 +360,7 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
 
 int main()
 {
-    
+    {
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
     IntType it1(3), it2(2);
@@ -466,10 +463,11 @@ int main()
 
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
+    }
+    
+    //Tests from project4 parts - BEGIN 
 
-    /*
-    Tests from project4 parts - BEGIN 
-
+    {
     FloatType ft1(1.6f);
     DoubleType dt1(0.81234);
     IntType it1(23);
@@ -522,6 +520,6 @@ int main()
     std::cout << "dt3/0\t\t\t : " << dt3.divide(0) << std::endl;
     std::cout << "it3/0\t\t\t : " << it3.divide(0) << std::endl;
     
-    Tests from project4 parts - END 
-    */
+    //Tests from project4 parts - END 
+    }
 }
