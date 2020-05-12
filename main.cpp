@@ -57,43 +57,111 @@ send me a DM to check your pull request
  Wait for my code review.
  */
 
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+
+struct FloatType;
+struct DoubleType;
+struct IntType;
+
+// Type Declarations - BEGIN ==========================
+
 struct Point
 {
+    Point(float x_, float y_);
+    Point(const FloatType& x_, const FloatType& y_);
+    Point(const DoubleType& x_, const DoubleType& y_);
+    Point(const IntType& x_, const IntType& y_);
+
     Point& multiply(float m)
     {
         x *= m;
         y *= m;
         return *this;
     }
+    
+    Point& multiply(const FloatType& ft);
+    Point& multiply(const DoubleType& dt);
+    Point& multiply(const IntType& it);
+    void toString();
+
 private:
     float x{0}, y{0};
 };
 
-
-
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-
-// FloatType - BEGIN ==================================
-
 struct FloatType
 {
-    const float epsilon = 0.00001f;
-
     FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
-    ~FloatType() {delete ownedFloat; ownedFloat = nullptr;}
+    ~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
+    FloatType& operator=(const FloatType&);
 
-    operator float() { return *ownedFloat;}
+    operator float() const { return *ownedFloat; }
 
     FloatType& add(float rhs);
     FloatType& subtract(float rhs);
     FloatType& multiply(float rhs);
     FloatType& divide(float rhs);
 
+    FloatType& pow(float rhs);
+    FloatType& pow(const FloatType& rhs);
+    FloatType& pow(const DoubleType& rhs);
+    FloatType& pow(const IntType& rhs);
+
 private:
     float* ownedFloat;
+    FloatType& powInternal(const float value);
 };
+
+struct DoubleType
+{    
+    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
+    ~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
+    DoubleType& operator=(const DoubleType&);
+
+    operator double() const { return *ownedDouble; }
+
+    DoubleType& add(double rhs);
+    DoubleType& subtract(double rhs);
+    DoubleType& multiply(double rhs);
+    DoubleType& divide(double rhs);
+
+    DoubleType& pow(double rhs);
+    DoubleType& pow(const FloatType& rhs);
+    DoubleType& pow(const DoubleType& rhs);
+    DoubleType& pow(const IntType& rhs);
+
+private:
+    double* ownedDouble;
+    DoubleType& powInternal(const double value);
+};
+
+struct IntType
+{
+    IntType(int intValue) : ownedInt(new int(intValue)) {}
+    ~IntType() { delete ownedInt; ownedInt = nullptr; }
+    IntType& operator=(const IntType&);
+
+    operator int() const { return *ownedInt; }
+
+    IntType& add(int rhs);
+    IntType& subtract(int rhs);
+    IntType& multiply(int rhs);
+    IntType& divide(int rhs);
+
+    IntType& pow(int rhs);
+    IntType& pow(const FloatType& rhs);
+    IntType& pow(const DoubleType& rhs);
+    IntType& pow(const IntType& rhs);
+
+private:
+    int* ownedInt;
+    IntType& powInternal(const int value);
+};
+
+// Type Declarations - END ============================
+
+// FloatType Implementations - BEGIN ==================
 
 FloatType& FloatType::add(float rhs)
 {
@@ -113,37 +181,43 @@ FloatType& FloatType::multiply(float rhs)
     return *this;
 }
 
-// Reference:
-// https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
 FloatType& FloatType::divide(float rhs)
 {
-    if( std::abs(rhs - 0.0f) < epsilon)
+    if( std::abs(rhs - 0.0f) < 0.00001f)
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
     *ownedFloat /= rhs;
     return *this;
 }
 
-// FloatType - END ====================================
-
-// DoubleType - BEGIN =================================
-
-struct DoubleType
+FloatType& FloatType::powInternal(const float value)
 {
-    const double epsilon = 0.00001;
+    *ownedFloat = std::pow(*ownedFloat, value);
+    return *this;
+}
 
-    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
-    ~DoubleType() {delete ownedDouble; ownedDouble = nullptr;}
+FloatType& FloatType::pow(float rhs)
+{
+    return powInternal(rhs);
+}
 
-    operator double() { return *ownedDouble;}
+FloatType& FloatType::pow(const FloatType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
 
-    DoubleType& add(double rhs);
-    DoubleType& subtract(double rhs);
-    DoubleType& multiply(double rhs);
-    DoubleType& divide(double rhs);
+FloatType& FloatType::pow(const DoubleType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
 
-private:
-    double* ownedDouble;
-};
+FloatType& FloatType::pow(const IntType& rhs)
+{
+    return powInternal(static_cast<float>(rhs));
+}
+
+// FloatType Implementations - END ====================
+
+// DoubleType Implementations - BEGIN =================
 
 DoubleType& DoubleType::add(double rhs)
 {
@@ -163,37 +237,43 @@ DoubleType& DoubleType::multiply(double rhs)
     return *this;
 }
 
-// Reference:
-// https://www.tutorialspoint.com/what-is-the-most-effective-way-for-float-and-double-comparison-in-c-cplusplus
 DoubleType& DoubleType::divide(double rhs)
 {
-    if( fabs(rhs - 0.0) < epsilon)
+    if( fabs(rhs - 0.0) < 0.00001)
         std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
     *ownedDouble /= rhs;
     return *this;
 }
 
-// DoubleType - END ===================================
-
-// IntType - BEGIN  ===================================
-
-struct IntType
+DoubleType& DoubleType::powInternal(const double value)
 {
-    const double epsilon = 0;
+    *ownedDouble = std::pow(*ownedDouble, value);
+    return *this;
+}
 
-    IntType(int intValue) : ownedInt(new int(intValue)) {}
-    ~IntType() {delete ownedInt; ownedInt = nullptr;}
+DoubleType& DoubleType::pow(double rhs)
+{
+    return powInternal(rhs);
+}
 
-    operator int() { return *ownedInt;}
+DoubleType& DoubleType::pow(const FloatType& rhs)
+{
+    return powInternal(static_cast<double>(rhs));
+}
 
-    IntType& add(int rhs);
-    IntType& subtract(int rhs);
-    IntType& multiply(int rhs);
-    IntType& divide(int rhs);
+DoubleType& DoubleType::pow(const DoubleType& rhs)
+{
+    return powInternal(static_cast<double>(rhs));
+}
 
-private:
-    int* ownedInt;
-};
+DoubleType& DoubleType::pow(const IntType& rhs)
+{
+    return powInternal(static_cast<double>(rhs));
+}
+
+// DoubleType Implementations - END ===================
+
+// IntType Implementations - BEGIN ====================
 
 IntType& IntType::add(int rhs)
 {
@@ -224,10 +304,170 @@ IntType& IntType::divide(int rhs)
     return *this;
 }
 
-// IntType - END  =====================================
+IntType& IntType::powInternal(const int value)
+{
+    *ownedInt = static_cast<int>(std::pow(*ownedInt, value));
+    return *this;
+}
+
+IntType& IntType::pow(int rhs)
+{
+    return powInternal(rhs);
+}
+
+IntType& IntType::pow(const FloatType& rhs)
+{
+    return powInternal(static_cast<int>(rhs));
+}
+
+IntType& IntType::pow(const DoubleType& rhs)
+{
+    return powInternal(static_cast<int>(rhs));
+}
+
+IntType& IntType::pow(const IntType& rhs)
+{
+    return powInternal(static_cast<int>(rhs));
+}
+
+// IntType Implementations - END ======================
+
+// Point Implementations - BEGIN ======================
+
+Point::Point(float x_, float y_) : x(x_), y(y_) {}
+Point::Point(const FloatType& x_, const FloatType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
+Point::Point(const DoubleType& x_, const DoubleType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
+Point::Point(const IntType& x_, const IntType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
+
+Point& Point::multiply(const FloatType& ft)
+{
+    return multiply(static_cast<float>(ft));
+}
+
+Point& Point::multiply(const DoubleType& dt)
+{
+    return multiply(static_cast<float>(dt));
+}
+
+Point& Point::multiply(const IntType& it)
+{
+    return multiply(static_cast<float>(it));
+}
+
+void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::endl; }
+
+// Point Implementations - END ========================
 
 int main()
 {
+    {
+    FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
+    DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
+    IntType it1(3), it2(2);
+
+    std::cout << std::endl;
+    std::cout << "Tests - pow" << std::endl;
+    std::cout << "-----------" << std::endl;
+    std::cout << std::endl;
+    std::cout << "FloatType ft1\t : " << ft1 << std::endl;
+    std::cout << "FloatType ft2\t : " << ft2 << std::endl;
+    std::cout << "FloatType ft3\t : " << ft3 << std::endl;
+    std::cout << "FloatType ft4\t : " << ft4 << std::endl;
+    std::cout << "DoubleType dt1\t : " << dt1 << std::endl;
+    std::cout << "DoubleType dt2\t : " << dt2 << std::endl;
+    std::cout << "DoubleType dt3\t : " << dt3 << std::endl;
+    std::cout << "IntType it1\t\t : " << it1 << std::endl;
+    std::cout << "IntType it2\t\t : " << it2 << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "(ft1)^2\t\t\t : " << ft1.pow(2) << std::endl;
+    std::cout << "(ft2)^0.5\t\t : " << ft2.pow(0.5) << std::endl;
+    std::cout << "(ft3)^2.0\t\t : " << ft3.pow(2.f) << std::endl;
+    std::cout << "(ft4)^0\t\t\t : " << ft4.pow(0) << std::endl;
+    std::cout << "(dt1)^0.5\t\t : " << dt1.pow(0.5) << std::endl;
+    std::cout << "((dt2)^0.5)^2\t : " << dt2.pow(0.5).pow(2) << std::endl;
+    std::cout << "(dt3)^0\t\t\t : " << dt3.pow(0) << std::endl;
+    std::cout << "((dt3)^0)^0.5\t : " << dt3.pow(0).pow(0.5) << std::endl;
+    std::cout << "(it1)^3\t\t\t : " << it1.pow(3) << std::endl;
+    std::cout << "((it2)^12)^2\t : " << it2.pow(12).pow(2) << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "Tests - Point" << std::endl;
+    std::cout << "-------------" << std::endl;
+
+    Point p1(0.f, 0.f), p1f(0.f, 0.f), p1ft(0.f, 0.f), p1dt(0.f, 0.f), p1it(0.f, 0.f);
+    Point p2(9.5f, 2.6f), p2f(9.5f, 2.6f), p2ft(9.5f, 2.6f), p2dt(9.5f, 2.6f), p2it(9.5f, 2.6f);
+    Point p3(100.f, 10.f), p3f(100.f, 10.f), p3ft(100.f, 10.f), p3dt(100.f, 10.f), p3it(100.f, 10.f);
+
+    FloatType ft(1.6f);
+    DoubleType dt(0.81234);
+    IntType it(7);
+
+    std::cout << std::endl;
+
+    std::cout << "f multipier\t\t : " << "5" << std::endl;
+    std::cout << "ft multiplier\t : " << ft << std::endl;
+    std::cout << "dt multiplier\t : " << dt << std::endl;
+    std::cout << "it multiplier\t : " << it << std::endl;
+
+    // Point:: multiply with p1
+    std::cout << std::endl;
+    std::cout << "p1\t\t\t\t";
+    p1.toString();
+    std::cout << "p1 * f\t\t\t";
+    p1f.multiply(5.f);
+    p1f.toString();
+    std::cout << "p1 * ft\t\t\t";
+    p1ft.multiply(ft);
+    p1ft.toString();
+    std::cout << "p1 * dt\t\t\t";
+    p1dt.multiply(dt);
+    p1dt.toString();
+    std::cout << "p1 * it\t\t\t";
+    p1it.multiply(it);
+    p1it.toString();
+
+    // Point:: multiply with p2
+    std::cout << std::endl;
+    std::cout << "p2\t\t\t\t";
+    p2.toString();
+    std::cout << "p2 * f\t\t\t";
+    p2f.multiply(5.f);
+    p2f.toString();
+    std::cout << "p2 * ft\t\t\t";
+    p2ft.multiply(ft);
+    p2ft.toString();
+    std::cout << "p2 * dt\t\t\t";
+    p2dt.multiply(dt);
+    p2dt.toString();
+    std::cout << "p2 * it\t\t\t";
+    p2it.multiply(it);
+    p2it.toString();
+
+    // Point:: multiply with p3
+    std::cout << std::endl;
+    std::cout << "p3\t\t\t\t";
+    p3.toString();
+    std::cout << "p3 * f\t\t\t";
+    p3f.multiply(5.f);
+    p3f.toString();
+    std::cout << "p3 * ft\t\t\t";
+    p3ft.multiply(ft);
+    p3ft.toString();
+    std::cout << "p3 * dt\t\t\t";
+    p3dt.multiply(dt);
+    p3dt.toString();
+    std::cout << "p3 * it\t\t\t";
+    p3it.multiply(it);
+    p3it.toString();
+
+    std::cout << std::endl;
+    std::cout << "good to go!" << std::endl;
+    }
+    
+    //Tests from project4 parts - BEGIN 
+
+    {
     FloatType ft1(1.6f);
     DoubleType dt1(0.81234);
     IntType it1(23);
@@ -279,7 +519,7 @@ int main()
     std::cout << "ft3/0\t\t\t : " << ft3.divide(0) << std::endl;
     std::cout << "dt3/0\t\t\t : " << dt3.divide(0) << std::endl;
     std::cout << "it3/0\t\t\t : " << it3.divide(0) << std::endl;
-
-    std::cout << std::endl;
-    std::cout << "good to go!" << std::endl;
+    
+    //Tests from project4 parts - END 
+    }
 }
