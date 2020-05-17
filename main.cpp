@@ -57,9 +57,6 @@ namespace Example
 
  */
 
-
-
-
 #include <iostream>
 #include <iomanip>
 #include <cmath>
@@ -101,6 +98,12 @@ struct FloatType
 
     operator float() const { return *ownedFloat; }
 
+// 1) replace the add/subtract/multiply/etc functions with overloaded math operators 
+// BDS, 5/17/2020
+//  - Does this instruction mean delete the previous math functions?
+//  - Commenting them out for now
+
+/*
     FloatType& add(float rhs);
     FloatType& subtract(float rhs);
     FloatType& multiply(float rhs);
@@ -110,10 +113,16 @@ struct FloatType
     FloatType& pow(const FloatType& rhs);
     FloatType& pow(const DoubleType& rhs);
     FloatType& pow(const IntType& rhs);
+*/
+
+    FloatType& operator+=(float other);
+    FloatType& operator-=(float other);
+    FloatType& operator*=(float other);
+    FloatType& operator/=(float other);
 
 private:
     float* ownedFloat;
-    FloatType& powInternal(const float value);
+    //FloatType& powInternal(const float value);
 };
 
 struct DoubleType
@@ -166,6 +175,7 @@ private:
 
 // FloatType Implementations - BEGIN ==================
 
+/*
 FloatType& FloatType::add(float rhs)
 {
     *ownedFloat += rhs;
@@ -216,6 +226,33 @@ FloatType& FloatType::pow(const DoubleType& rhs)
 FloatType& FloatType::pow(const IntType& rhs)
 {
     return powInternal(static_cast<float>(rhs));
+}
+*/
+
+FloatType& FloatType::operator+=(float other)
+{
+    *ownedFloat += other;
+    return *this;
+}
+
+FloatType& FloatType::operator-=(float other)
+{
+    *ownedFloat -= other;
+    return *this;
+}
+
+FloatType& FloatType::operator*=(float other)
+{
+    *ownedFloat -= other;
+    return *this;
+}
+
+FloatType& FloatType::operator/=(float other)
+{
+    if( std::abs(other - 0.0f) < 0.00001f)
+        std::cout << "Warning: Use of " << other << " in this operation would result in a divide-by-zero situation : ";
+    *ownedFloat /= other;
+    return *this;
 }
 
 // FloatType Implementations - END ====================
@@ -377,6 +414,17 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
 
 int main()
 {
+    FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
+    std::cout << std::endl;
+    std::cout << "FloatType ft1\t : " << ft1 << std::endl;
+    std::cout << "FloatType ft2\t : " << ft2 << std::endl;
+    std::cout << "FloatType ft3\t : " << ft3 << std::endl;
+    std::cout << "FloatType ft4\t : " << ft4 << std::endl;
+    std::cout << std::endl;
+
+
+    /* main() from project4-part4 - BEGIN
+    
     {
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
@@ -539,4 +587,7 @@ int main()
     
     //Tests from project4 parts - END 
     }
+
+    main() from project4-part4 - END
+    */
 }
