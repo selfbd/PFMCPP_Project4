@@ -98,31 +98,19 @@ struct FloatType
 
     operator float() const { return *ownedFloat; }
 
-// 1) replace the add/subtract/multiply/etc functions with overloaded math operators 
-// BDS, 5/17/2020
-//  - Does this instruction mean delete the previous math functions?
-//  - Commenting them out for now
-
-/*
-    FloatType& add(float rhs);
-    FloatType& subtract(float rhs);
-    FloatType& multiply(float rhs);
-    FloatType& divide(float rhs);
-
     FloatType& pow(float rhs);
     FloatType& pow(const FloatType& rhs);
     FloatType& pow(const DoubleType& rhs);
     FloatType& pow(const IntType& rhs);
-*/
 
-    FloatType& operator+=(float other);
-    FloatType& operator-=(float other);
-    FloatType& operator*=(float other);
-    FloatType& operator/=(float other);
+    FloatType& operator+=(float rhs);
+    FloatType& operator-=(float rhs);
+    FloatType& operator*=(float rhs);
+    FloatType& operator/=(float rhs);
 
 private:
     float* ownedFloat;
-    //FloatType& powInternal(const float value);
+    FloatType& powInternal(const float value);
 };
 
 struct DoubleType
@@ -133,15 +121,15 @@ struct DoubleType
 
     operator double() const { return *ownedDouble; }
 
-    DoubleType& add(double rhs);
-    DoubleType& subtract(double rhs);
-    DoubleType& multiply(double rhs);
-    DoubleType& divide(double rhs);
-
     DoubleType& pow(double rhs);
     DoubleType& pow(const FloatType& rhs);
     DoubleType& pow(const DoubleType& rhs);
     DoubleType& pow(const IntType& rhs);
+
+    DoubleType& operator+=(double rhs);
+    DoubleType& operator-=(double rhs);
+    DoubleType& operator*=(double rhs);
+    DoubleType& operator/=(double rhs);
 
 private:
     double* ownedDouble;
@@ -156,15 +144,15 @@ struct IntType
 
     operator int() const { return *ownedInt; }
 
-    IntType& add(int rhs);
-    IntType& subtract(int rhs);
-    IntType& multiply(int rhs);
-    IntType& divide(int rhs);
-
     IntType& pow(int rhs);
     IntType& pow(const FloatType& rhs);
     IntType& pow(const DoubleType& rhs);
     IntType& pow(const IntType& rhs);
+
+    IntType& operator+=(int rhs);
+    IntType& operator-=(int rhs);
+    IntType& operator*=(int rhs);
+    IntType& operator/=(int rhs);
 
 private:
     int* ownedInt;
@@ -174,33 +162,6 @@ private:
 // Type Declarations - END ============================
 
 // FloatType Implementations - BEGIN ==================
-
-/*
-FloatType& FloatType::add(float rhs)
-{
-    *ownedFloat += rhs;
-    return *this;
-}
-
-FloatType& FloatType::subtract(float rhs)
-{
-    *ownedFloat -= rhs;
-    return *this;
-}
-
-FloatType& FloatType::multiply(float rhs)
-{
-    *ownedFloat *= rhs;
-    return *this;
-}
-
-FloatType& FloatType::divide(float rhs)
-{
-    if( std::abs(rhs - 0.0f) < 0.00001f)
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    *ownedFloat /= rhs;
-    return *this;
-}
 
 FloatType& FloatType::powInternal(const float value)
 {
@@ -227,63 +188,36 @@ FloatType& FloatType::pow(const IntType& rhs)
 {
     return powInternal(static_cast<float>(rhs));
 }
-*/
 
-FloatType& FloatType::operator+=(float other)
+FloatType& FloatType::operator+=(float rhs)
 {
-    *ownedFloat += other;
+    *ownedFloat += rhs;
     return *this;
 }
 
-FloatType& FloatType::operator-=(float other)
+FloatType& FloatType::operator-=(float rhs)
 {
-    *ownedFloat -= other;
+    *ownedFloat -= rhs;
     return *this;
 }
 
-FloatType& FloatType::operator*=(float other)
+FloatType& FloatType::operator*=(float rhs)
 {
-    *ownedFloat -= other;
+    *ownedFloat -= rhs;
     return *this;
 }
 
-FloatType& FloatType::operator/=(float other)
+FloatType& FloatType::operator/=(float rhs)
 {
-    if( std::abs(other - 0.0f) < 0.00001f)
-        std::cout << "Warning: Use of " << other << " in this operation would result in a divide-by-zero situation : ";
-    *ownedFloat /= other;
+    if( std::abs(rhs - 0.0f) < 0.00001f)
+        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
+    *ownedFloat /= rhs;
     return *this;
 }
 
 // FloatType Implementations - END ====================
 
 // DoubleType Implementations - BEGIN =================
-
-DoubleType& DoubleType::add(double rhs)
-{
-    *ownedDouble += rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::subtract(double rhs)
-{
-    *ownedDouble -= rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::multiply(double rhs)
-{
-    *ownedDouble *= rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::divide(double rhs)
-{
-    if( fabs(rhs - 0.0) < 0.00001)
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    *ownedDouble /= rhs;
-    return *this;
-}
 
 DoubleType& DoubleType::powInternal(const double value)
 {
@@ -311,38 +245,35 @@ DoubleType& DoubleType::pow(const IntType& rhs)
     return powInternal(static_cast<double>(rhs));
 }
 
+DoubleType& DoubleType::operator+=(double rhs)
+{
+    *ownedDouble += rhs;
+    return *this;
+}
+
+DoubleType& DoubleType::operator-=(double rhs)
+{
+    *ownedDouble -= rhs;
+    return *this;
+}
+
+DoubleType& DoubleType::operator*=(double rhs)
+{
+    *ownedDouble *= rhs;
+    return *this;
+}
+
+DoubleType& DoubleType::operator/=(double rhs)
+{
+    if( fabs(rhs - 0.0) < 0.00001)
+        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
+    *ownedDouble /= rhs;
+    return *this;
+}
+
 // DoubleType Implementations - END ===================
 
 // IntType Implementations - BEGIN ====================
-
-IntType& IntType::add(int rhs)
-{
-    *ownedInt += rhs;
-    return *this;
-}
-
-IntType& IntType::subtract(int rhs)
-{
-    *ownedInt -= rhs;
-    return *this;
-}
-
-IntType& IntType::multiply(int rhs)
-{
-    *ownedInt *= rhs;
-    return *this;
-}
-
-IntType& IntType::divide(int rhs)
-{
-    if(rhs == 0)
-    {
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation. Divide operation aborted. : ";
-        return *this;
-    }
-    *ownedInt /= rhs;
-    return *this;
-}
 
 IntType& IntType::powInternal(const int value)
 {
@@ -368,6 +299,35 @@ IntType& IntType::pow(const DoubleType& rhs)
 IntType& IntType::pow(const IntType& rhs)
 {
     return powInternal(static_cast<int>(rhs));
+}
+
+IntType& IntType::operator+=(int rhs)
+{
+    *ownedInt += rhs;
+    return *this;
+}
+
+IntType& IntType::operator-=(int rhs)
+{
+    *ownedInt -= rhs;
+    return *this;
+}
+
+IntType& IntType::operator*=(int rhs)
+{
+    *ownedInt *= rhs;
+    return *this;
+}
+
+IntType& IntType::operator/=(int rhs)
+{
+    if(rhs == 0)
+    {
+        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation. Divide operation aborted. : ";
+        return *this;
+    }
+    *ownedInt /= rhs;
+    return *this;
 }
 
 // IntType Implementations - END ======================
@@ -414,6 +374,7 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
 
 int main()
 {
+    /*
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     std::cout << std::endl;
     std::cout << "FloatType ft1\t : " << ft1 << std::endl;
@@ -421,10 +382,7 @@ int main()
     std::cout << "FloatType ft3\t : " << ft3 << std::endl;
     std::cout << "FloatType ft4\t : " << ft4 << std::endl;
     std::cout << std::endl;
-
-
-    /* main() from project4-part4 - BEGIN
-    
+*/
     {
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
@@ -529,7 +487,7 @@ int main()
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
     }
-    
+        
     //Tests from project4 parts - BEGIN 
 
     {
@@ -587,7 +545,4 @@ int main()
     
     //Tests from project4 parts - END 
     }
-
-    main() from project4-part4 - END
-    */
 }
