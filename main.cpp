@@ -58,7 +58,6 @@ namespace Example
  */
 
 #include <iostream>
-#include <iomanip>
 #include <cmath>
 
 struct FloatType;
@@ -374,15 +373,6 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
 
 int main()
 {
-    /*
-    FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
-    std::cout << std::endl;
-    std::cout << "FloatType ft1\t : " << ft1 << std::endl;
-    std::cout << "FloatType ft2\t : " << ft2 << std::endl;
-    std::cout << "FloatType ft3\t : " << ft3 << std::endl;
-    std::cout << "FloatType ft4\t : " << ft4 << std::endl;
-    std::cout << std::endl;
-*/
     {
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
@@ -501,9 +491,17 @@ int main()
     std::cout << "IntType it1\t\t : " << it1 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft1/dt1\t\t\t : " << static_cast<double>(ft1) / dt1  << std::endl;
-    std::cout << "(ft1+dt1)*10\t : " << static_cast<float>( ft1.add( static_cast<float>(dt1) ).multiply( static_cast<float>(10) ) ) << std::endl;
-    std::cout << "(dt1-it1)*it1\t : " << static_cast<double>( dt1.subtract(it1).divide( static_cast<double>(it1) ) ) << std::endl;
+
+    ft1 /= static_cast<float>(dt1);
+    std::cout << "ft1/dt1\t\t\t : " << ft1 << std::endl;
+
+    ft1 += static_cast<float>(dt1);
+    ft1 *= 10;
+    std::cout << "(ft1+dt1)*10\t : " << ft1 << std::endl;
+
+    dt1 -= it1;
+    dt1 *= it1;
+    std::cout << "(dt1-it1)*it1\t : " << dt1 << std::endl;
 
     FloatType ft2 = 0.f;
     DoubleType dt2 = 0.000987;
@@ -514,10 +512,16 @@ int main()
     std::cout << "IntType it2\t\t : " << it2 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft2/dt2\t\t\t : " << static_cast<double>(ft2) / dt2 << std::endl;
-    std::cout << "dt2/ft2\t\t\t : " << dt2 / static_cast<double>(ft2) << std::endl;
-    //std::cout << "it2*dt2-12\t\t : " << it2.multiply(dt2).subtract(12)<< std::endl;
-    std::cout << "it2*dt2-12\t\t : " << dt2.multiply( static_cast<double>(it2) ).subtract(12)<< std::endl;
+
+    ft2 /= static_cast<float>(dt2);
+    std::cout << "ft2/dt2\t\t\t : " << ft2 << std::endl;
+
+    dt2 /= static_cast<double>(ft2);
+    std::cout << "dt2/ft2\t\t\t : " << dt2 << std::endl;
+
+    dt2 *= it2;
+    dt2 -= 12;
+    std::cout << "*dt2*it2-12\t\t : " << dt2 << std::endl;
 
     FloatType ft3 = 3.1f;
     DoubleType dt3 = 3.14159;
@@ -528,21 +532,27 @@ int main()
     std::cout << "IntType it3\t\t : " << it3 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft3*it3-dt3\t\t : " << ft3.multiply( static_cast<float>(it3) ).subtract( static_cast<float>(dt3) )<< std::endl;
-    
-    std::cout << std::endl;
-    std::cout << "FloatType ft3\t : " << ft3 << std::endl;
-    std::cout << "DoubleType dt3\t : " << dt3 << std::endl;
-    std::cout << "IntType it3\t\t : " << it3 << std::endl;
+
+    ft3 *= it3;
+    ft3 -= it3;
+    std::cout << "ft3*it3-dt3\t\t : " << ft3 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft3*(it3-dt3)\t : " << ft3 * it3.subtract( static_cast<int>(dt3) ) << std::endl;
+
+    dt3 *= -1;
+    it3 += static_cast<int>(dt3);
+    ft3 *= it3;
+    std::cout << "ft3*(it3-dt3)\t : " << ft3 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft3/0\t\t\t : " << ft3.divide(0) << std::endl;
-    std::cout << "dt3/0\t\t\t : " << dt3.divide(0) << std::endl;
-    std::cout << "it3/0\t\t\t : " << it3.divide(0) << std::endl;
-    
+
+    ft3 /= 0;
+    dt3 /= 0;
+    it3 /= 0;
+    std::cout << "ft3/0\t\t\t : " << ft3 << std::endl;
+    std::cout << "dt3/0\t\t\t : " << dt3 << std::endl;
+    std::cout << "it3/0\t\t\t : " << it3 << std::endl;
+
     //Tests from project4 parts - END 
     }
 }
