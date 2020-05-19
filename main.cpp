@@ -408,6 +408,8 @@ int main()
     std::cout << "Tests - Point" << std::endl;
     std::cout << "-------------" << std::endl;
 
+FIXME: I don't know how I missed it before, but all of these are only invoking the Point(float, float) constructor
+if you want to invoke the others, you need to pass instances of the types that the other constructors take.
     Point p1(0.f, 0.f), p1f(0.f, 0.f), p1ft(0.f, 0.f), p1dt(0.f, 0.f), p1it(0.f, 0.f);
     Point p2(9.5f, 2.6f), p2f(9.5f, 2.6f), p2ft(9.5f, 2.6f), p2dt(9.5f, 2.6f), p2it(9.5f, 2.6f);
     Point p3(100.f, 10.f), p3f(100.f, 10.f), p3ft(100.f, 10.f), p3dt(100.f, 10.f), p3it(100.f, 10.f);
@@ -546,7 +548,7 @@ int main()
 
     std::cout << std::endl;
 
-    ft3 /= 0;
+    ft3 /= 0; FIXME your output has some weird formatting for these lines because your operator/='s cout doesn't end with a "\n";
     dt3 /= 0;
     it3 /= 0;
     std::cout << "ft3/0\t\t\t : " << ft3 << std::endl;
