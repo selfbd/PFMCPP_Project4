@@ -57,11 +57,7 @@ namespace Example
 
  */
 
-
-
-
 #include <iostream>
-#include <iomanip>
 #include <cmath>
 
 struct FloatType;
@@ -101,15 +97,15 @@ struct FloatType
 
     operator float() const { return *ownedFloat; }
 
-    FloatType& add(float rhs);
-    FloatType& subtract(float rhs);
-    FloatType& multiply(float rhs);
-    FloatType& divide(float rhs);
-
     FloatType& pow(float rhs);
     FloatType& pow(const FloatType& rhs);
     FloatType& pow(const DoubleType& rhs);
     FloatType& pow(const IntType& rhs);
+
+    FloatType& operator+=(float rhs);
+    FloatType& operator-=(float rhs);
+    FloatType& operator*=(float rhs);
+    FloatType& operator/=(float rhs);
 
 private:
     float* ownedFloat;
@@ -124,15 +120,15 @@ struct DoubleType
 
     operator double() const { return *ownedDouble; }
 
-    DoubleType& add(double rhs);
-    DoubleType& subtract(double rhs);
-    DoubleType& multiply(double rhs);
-    DoubleType& divide(double rhs);
-
     DoubleType& pow(double rhs);
     DoubleType& pow(const FloatType& rhs);
     DoubleType& pow(const DoubleType& rhs);
     DoubleType& pow(const IntType& rhs);
+
+    DoubleType& operator+=(double rhs);
+    DoubleType& operator-=(double rhs);
+    DoubleType& operator*=(double rhs);
+    DoubleType& operator/=(double rhs);
 
 private:
     double* ownedDouble;
@@ -147,15 +143,15 @@ struct IntType
 
     operator int() const { return *ownedInt; }
 
-    IntType& add(int rhs);
-    IntType& subtract(int rhs);
-    IntType& multiply(int rhs);
-    IntType& divide(int rhs);
-
     IntType& pow(int rhs);
     IntType& pow(const FloatType& rhs);
     IntType& pow(const DoubleType& rhs);
     IntType& pow(const IntType& rhs);
+
+    IntType& operator+=(int rhs);
+    IntType& operator-=(int rhs);
+    IntType& operator*=(int rhs);
+    IntType& operator/=(int rhs);
 
 private:
     int* ownedInt;
@@ -165,32 +161,6 @@ private:
 // Type Declarations - END ============================
 
 // FloatType Implementations - BEGIN ==================
-
-FloatType& FloatType::add(float rhs)
-{
-    *ownedFloat += rhs;
-    return *this;
-}
-
-FloatType& FloatType::subtract(float rhs)
-{
-    *ownedFloat -= rhs;
-    return *this;
-}
-
-FloatType& FloatType::multiply(float rhs)
-{
-    *ownedFloat *= rhs;
-    return *this;
-}
-
-FloatType& FloatType::divide(float rhs)
-{
-    if( std::abs(rhs - 0.0f) < 0.00001f)
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    *ownedFloat /= rhs;
-    return *this;
-}
 
 FloatType& FloatType::powInternal(const float value)
 {
@@ -218,35 +188,35 @@ FloatType& FloatType::pow(const IntType& rhs)
     return powInternal(static_cast<float>(rhs));
 }
 
+FloatType& FloatType::operator+=(float rhs)
+{
+    *ownedFloat += rhs;
+    return *this;
+}
+
+FloatType& FloatType::operator-=(float rhs)
+{
+    *ownedFloat -= rhs;
+    return *this;
+}
+
+FloatType& FloatType::operator*=(float rhs)
+{
+    *ownedFloat -= rhs;
+    return *this;
+}
+
+FloatType& FloatType::operator/=(float rhs)
+{
+    if( std::abs(rhs - 0.0f) < 0.00001f)
+        std::cout << "Warning: Divide-by-zero attempt\n";
+    *ownedFloat /= rhs;
+    return *this;
+}
+
 // FloatType Implementations - END ====================
 
 // DoubleType Implementations - BEGIN =================
-
-DoubleType& DoubleType::add(double rhs)
-{
-    *ownedDouble += rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::subtract(double rhs)
-{
-    *ownedDouble -= rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::multiply(double rhs)
-{
-    *ownedDouble *= rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::divide(double rhs)
-{
-    if( fabs(rhs - 0.0) < 0.00001)
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation : ";
-    *ownedDouble /= rhs;
-    return *this;
-}
 
 DoubleType& DoubleType::powInternal(const double value)
 {
@@ -274,38 +244,35 @@ DoubleType& DoubleType::pow(const IntType& rhs)
     return powInternal(static_cast<double>(rhs));
 }
 
+DoubleType& DoubleType::operator+=(double rhs)
+{
+    *ownedDouble += rhs;
+    return *this;
+}
+
+DoubleType& DoubleType::operator-=(double rhs)
+{
+    *ownedDouble -= rhs;
+    return *this;
+}
+
+DoubleType& DoubleType::operator*=(double rhs)
+{
+    *ownedDouble *= rhs;
+    return *this;
+}
+
+DoubleType& DoubleType::operator/=(double rhs)
+{
+    if( fabs(rhs - 0.0) < 0.00001)
+        std::cout << "Warning: Divide-by-zero attempt\n";
+    *ownedDouble /= rhs;
+    return *this;
+}
+
 // DoubleType Implementations - END ===================
 
 // IntType Implementations - BEGIN ====================
-
-IntType& IntType::add(int rhs)
-{
-    *ownedInt += rhs;
-    return *this;
-}
-
-IntType& IntType::subtract(int rhs)
-{
-    *ownedInt -= rhs;
-    return *this;
-}
-
-IntType& IntType::multiply(int rhs)
-{
-    *ownedInt *= rhs;
-    return *this;
-}
-
-IntType& IntType::divide(int rhs)
-{
-    if(rhs == 0)
-    {
-        std::cout << "Warning: Use of " << rhs << " in this operation would result in a divide-by-zero situation. Divide operation aborted. : ";
-        return *this;
-    }
-    *ownedInt /= rhs;
-    return *this;
-}
 
 IntType& IntType::powInternal(const int value)
 {
@@ -331,6 +298,35 @@ IntType& IntType::pow(const DoubleType& rhs)
 IntType& IntType::pow(const IntType& rhs)
 {
     return powInternal(static_cast<int>(rhs));
+}
+
+IntType& IntType::operator+=(int rhs)
+{
+    *ownedInt += rhs;
+    return *this;
+}
+
+IntType& IntType::operator-=(int rhs)
+{
+    *ownedInt -= rhs;
+    return *this;
+}
+
+IntType& IntType::operator*=(int rhs)
+{
+    *ownedInt *= rhs;
+    return *this;
+}
+
+IntType& IntType::operator/=(int rhs)
+{
+    if(rhs == 0)
+    {
+        std::cout << "Warning: Divide-by-zero attempt. Divide operation aborted.\n";
+        return *this;
+    }
+    *ownedInt /= rhs;
+    return *this;
 }
 
 // IntType Implementations - END ======================
@@ -412,10 +408,21 @@ int main()
     std::cout << "Tests - Point" << std::endl;
     std::cout << "-------------" << std::endl;
 
+    // Examples calling Point ctor with floats
     Point p1(0.f, 0.f), p1f(0.f, 0.f), p1ft(0.f, 0.f), p1dt(0.f, 0.f), p1it(0.f, 0.f);
     Point p2(9.5f, 2.6f), p2f(9.5f, 2.6f), p2ft(9.5f, 2.6f), p2dt(9.5f, 2.6f), p2it(9.5f, 2.6f);
     Point p3(100.f, 10.f), p3f(100.f, 10.f), p3ft(100.f, 10.f), p3dt(100.f, 10.f), p3it(100.f, 10.f);
 
+    // Examples calling Point ctor with FloatType, DoubleType, and IntType
+    FloatType floatType(4.4f);
+    DoubleType doubleType(1.234);
+    IntType intType(3);
+
+    Point p4(floatType, floatType), p4f(floatType, floatType), p4ft(floatType, floatType), p4dt(floatType, floatType), p4it(floatType, floatType);
+    Point p5(doubleType, doubleType), p5f(doubleType, doubleType), p5ft(doubleType, doubleType), p5dt(doubleType, doubleType), p5it(doubleType, doubleType);
+    Point p6(intType, intType), p6f(intType, intType), p6ft(intType, intType), p6dt(intType, intType), p6it(intType, intType);
+
+    // Multipliers
     FloatType ft(1.6f);
     DoubleType dt(0.81234);
     IntType it(7);
@@ -478,10 +485,61 @@ int main()
     p3it.multiply(it);
     p3it.toString();
 
+    // Point:: multiply with p4
+    std::cout << std::endl;
+    std::cout << "p4\t\t\t\t";
+    p4.toString();
+    std::cout << "p4 * f\t\t\t";
+    p4f.multiply(5.f);
+    p4f.toString();
+    std::cout << "p4 * ft\t\t\t";
+    p4ft.multiply(ft);
+    p4ft.toString();
+    std::cout << "p4 * dt\t\t\t";
+    p4dt.multiply(dt);
+    p4dt.toString();
+    std::cout << "p4 * it\t\t\t";
+    p4it.multiply(it);
+    p4it.toString();
+
+    // Point:: multiply with p5
+    std::cout << std::endl;
+    std::cout << "p5\t\t\t\t";
+    p5.toString();
+    std::cout << "p5 * f\t\t\t";
+    p5f.multiply(5.f);
+    p5f.toString();
+    std::cout << "p5 * ft\t\t\t";
+    p5ft.multiply(ft);
+    p5ft.toString();
+    std::cout << "p5 * dt\t\t\t";
+    p5dt.multiply(dt);
+    p5dt.toString();
+    std::cout << "p5 * it\t\t\t";
+    p5it.multiply(it);
+    p5it.toString();
+
+    // Point:: multiply with p6
+    std::cout << std::endl;
+    std::cout << "p6\t\t\t\t";
+    p6.toString();
+    std::cout << "p6 * f\t\t\t";
+    p6f.multiply(5.f);
+    p6f.toString();
+    std::cout << "p6 * ft\t\t\t";
+    p6ft.multiply(ft);
+    p6ft.toString();
+    std::cout << "p6 * dt\t\t\t";
+    p6dt.multiply(dt);
+    p6dt.toString();
+    std::cout << "p6 * it\t\t\t";
+    p6it.multiply(it);
+    p6it.toString();
+
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
     }
-    
+        
     //Tests from project4 parts - BEGIN 
 
     {
@@ -495,9 +553,17 @@ int main()
     std::cout << "IntType it1\t\t : " << it1 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft1/dt1\t\t\t : " << static_cast<double>(ft1) / dt1  << std::endl;
-    std::cout << "(ft1+dt1)*10\t : " << static_cast<float>( ft1.add( static_cast<float>(dt1) ).multiply( static_cast<float>(10) ) ) << std::endl;
-    std::cout << "(dt1-it1)*it1\t : " << static_cast<double>( dt1.subtract(it1).divide( static_cast<double>(it1) ) ) << std::endl;
+
+    ft1 /= static_cast<float>(dt1);
+    std::cout << "ft1/dt1\t\t\t : " << ft1 << std::endl;
+
+    ft1 += static_cast<float>(dt1);
+    ft1 *= 10;
+    std::cout << "(ft1+dt1)*10\t : " << ft1 << std::endl;
+
+    dt1 -= it1;
+    dt1 *= it1;
+    std::cout << "(dt1-it1)*it1\t : " << dt1 << std::endl;
 
     FloatType ft2 = 0.f;
     DoubleType dt2 = 0.000987;
@@ -508,10 +574,16 @@ int main()
     std::cout << "IntType it2\t\t : " << it2 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft2/dt2\t\t\t : " << static_cast<double>(ft2) / dt2 << std::endl;
-    std::cout << "dt2/ft2\t\t\t : " << dt2 / static_cast<double>(ft2) << std::endl;
-    //std::cout << "it2*dt2-12\t\t : " << it2.multiply(dt2).subtract(12)<< std::endl;
-    std::cout << "it2*dt2-12\t\t : " << dt2.multiply( static_cast<double>(it2) ).subtract(12)<< std::endl;
+
+    ft2 /= static_cast<float>(dt2);
+    std::cout << "ft2/dt2\t\t\t : " << ft2 << std::endl;
+
+    dt2 /= static_cast<double>(ft2);
+    std::cout << "dt2/ft2\t\t\t : " << dt2 << std::endl;
+
+    dt2 *= it2;
+    dt2 -= 12;
+    std::cout << "*dt2*it2-12\t\t : " << dt2 << std::endl;
 
     FloatType ft3 = 3.1f;
     DoubleType dt3 = 3.14159;
@@ -522,21 +594,27 @@ int main()
     std::cout << "IntType it3\t\t : " << it3 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft3*it3-dt3\t\t : " << ft3.multiply( static_cast<float>(it3) ).subtract( static_cast<float>(dt3) )<< std::endl;
-    
-    std::cout << std::endl;
-    std::cout << "FloatType ft3\t : " << ft3 << std::endl;
-    std::cout << "DoubleType dt3\t : " << dt3 << std::endl;
-    std::cout << "IntType it3\t\t : " << it3 << std::endl;
+
+    ft3 *= it3;
+    ft3 -= it3;
+    std::cout << "ft3*it3-dt3\t\t : " << ft3 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft3*(it3-dt3)\t : " << ft3 * it3.subtract( static_cast<int>(dt3) ) << std::endl;
+
+    dt3 *= -1;
+    it3 += static_cast<int>(dt3);
+    ft3 *= it3;
+    std::cout << "ft3*(it3-dt3)\t : " << ft3 << std::endl;
 
     std::cout << std::endl;
-    std::cout << "ft3/0\t\t\t : " << ft3.divide(0) << std::endl;
-    std::cout << "dt3/0\t\t\t : " << dt3.divide(0) << std::endl;
-    std::cout << "it3/0\t\t\t : " << it3.divide(0) << std::endl;
-    
+
+    ft3 /= 0; 
+    dt3 /= 0;
+    it3 /= 0;
+    std::cout << "ft3/0\t\t\t : " << ft3 << std::endl;
+    std::cout << "dt3/0\t\t\t : " << dt3 << std::endl;
+    std::cout << "it3/0\t\t\t : " << it3 << std::endl;
+
     //Tests from project4 parts - END 
     }
 }
