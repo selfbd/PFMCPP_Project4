@@ -49,6 +49,7 @@ build/run to make sure you don't have any errors
 
 #include <iostream>
 #include <cmath>
+#include <functional>
 
 struct FloatType;
 struct DoubleType;
@@ -87,6 +88,11 @@ struct FloatType
 
     operator float() const { return *ownedFloat; }
 
+    FloatType& apply(std::function<FloatType&(float&)>);
+
+    using FloatFuncPtr = void(*)(float&);
+    FloatType& apply(FloatFuncPtr);
+
     FloatType& pow(float rhs);
     FloatType& pow(const FloatType& rhs);
     FloatType& pow(const DoubleType& rhs);
@@ -109,6 +115,11 @@ struct DoubleType
     DoubleType& operator=(const DoubleType&);
 
     operator double() const { return *ownedDouble; }
+
+    DoubleType& apply(std::function<DoubleType&(double&)>);
+
+    using DoubleFuncPtr = void(*)(double&);
+    DoubleType& apply(DoubleFuncPtr);
 
     DoubleType& pow(double rhs);
     DoubleType& pow(const FloatType& rhs);
@@ -133,6 +144,11 @@ struct IntType
 
     operator int() const { return *ownedInt; }
 
+    IntType& apply(std::function<IntType&(int&)>);
+
+    using IntFuncPtr = void(*)(int&);
+    IntType& apply(IntFuncPtr);
+
     IntType& pow(int rhs);
     IntType& pow(const FloatType& rhs);
     IntType& pow(const DoubleType& rhs);
@@ -151,6 +167,24 @@ private:
 // Type Declarations - END ============================
 
 // FloatType Implementations - BEGIN ==================
+
+FloatType& FloatType::apply(std::function<FloatType&(float&)> floatFunc)
+{
+    if(floatFunc)
+    {
+        return floatFunc(*ownedFloat);
+    }
+    return *this;
+}
+
+FloatType& FloatType::apply(FloatFuncPtr floatFuncPtr)
+{
+    if(floatFuncPtr)
+    {
+        floatFuncPtr(*ownedFloat);
+    }
+    return *this; 
+}
 
 FloatType& FloatType::powInternal(const float value)
 {
@@ -208,6 +242,24 @@ FloatType& FloatType::operator/=(float rhs)
 
 // DoubleType Implementations - BEGIN =================
 
+DoubleType& DoubleType::apply(std::function<DoubleType&(double&)> doubleFunc)
+{
+    if(doubleFunc)
+    {
+        return doubleFunc(*ownedDouble);
+    }
+    return *this;
+}
+
+DoubleType& DoubleType::apply(DoubleFuncPtr doubleFuncPtr)
+{
+    if(doubleFuncPtr)
+    {
+        doubleFuncPtr(*ownedDouble);
+    }
+    return *this; 
+}
+
 DoubleType& DoubleType::powInternal(const double value)
 {
     *ownedDouble = std::pow(*ownedDouble, value);
@@ -263,6 +315,24 @@ DoubleType& DoubleType::operator/=(double rhs)
 // DoubleType Implementations - END ===================
 
 // IntType Implementations - BEGIN ====================
+
+IntType& IntType::apply(std::function<IntType&(int&)> intFunc)
+{
+    if(intFunc)
+    {
+        return intFunc(*ownedInt);
+    }
+    return *this;
+}
+
+IntType& IntType::apply(IntFuncPtr intFuncPtr)
+{
+    if(intFuncPtr)
+    {
+        intFuncPtr(*ownedInt);
+    }
+    return *this; 
+}
 
 IntType& IntType::powInternal(const int value)
 {
@@ -361,8 +431,81 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
  Wait for my code review.
  */
 
+void freeFuncSquareFloat (float& floatValue)
+{
+    floatValue = floatValue * floatValue;
+}
+
+void freeFuncSquareDouble (double& doubleValue)
+{
+    doubleValue = doubleValue * doubleValue;
+}
+
+void freeFuncSquareInt (int& intValue)
+{
+    intValue = intValue * intValue;
+}
+
 int main()
 {
+// project4-part6 - BEGIN
+    
+    // FloatType
+
+    FloatType ft(1.6f);
+
+    std::cout << std::endl;
+    std::cout << "\t\tFloatType ft\t\t\t\t\t: " << ft << std::endl;
+
+    ft.apply([&ft](float& floatValue) -> FloatType&
+    {
+        floatValue = floatValue * floatValue * floatValue;
+        return ft;
+    });
+    std::cout << "Cubed\tFloatType ft (lambda)\t\t\t: " << ft << std::endl;
+
+    ft.apply(freeFuncSquareFloat);
+    std::cout << "Squared\tFloatType ft (free function)\t: " << ft << std::endl;
+
+    // DoubleType
+
+    DoubleType dt(0.81234);
+
+    std::cout << std::endl;
+    std::cout << "\t\tDoubleType dt\t\t\t\t\t: " << dt << std::endl;
+
+    dt.apply([&dt](double& doubleValue) -> DoubleType&
+    {
+        doubleValue = doubleValue * doubleValue * doubleValue;
+        return dt;
+    });
+    std::cout << "Cubed\tDoubleType dt (lambda)\t\t\t: " << dt << std::endl;
+
+    dt.apply(freeFuncSquareDouble);
+    std::cout << "Squared\tDoubleType dt (free function)\t: " << dt << std::endl;
+
+    // IntType
+
+    IntType it(3);
+
+    std::cout << std::endl;
+    std::cout << "\t\tIntType it\t\t\t\t\t: " << it << std::endl;
+
+    it.apply([&it](int& intValue) -> IntType&
+    {
+        intValue = intValue * intValue * intValue;
+        return it;
+    });
+    std::cout << "Cubed\tIntType it (lambda)\t\t\t: " << it << std::endl;
+
+    it.apply(freeFuncSquareInt);
+    std::cout << "Squared\tIntType it (free function)\t: " << it << std::endl;
+
+// project4-part6 - END
+
+// ==============================
+
+/* project4-parts 1 - 5 - BEGIN
     {
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
@@ -607,4 +750,6 @@ int main()
 
     //Tests from project4 parts - END 
     }
+// project4-parts 1 - 5 - END
+*/
 }
