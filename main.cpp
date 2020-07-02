@@ -450,68 +450,73 @@ int main()
 {
 // project4-part6 - BEGIN
     
+    std::cout << std::endl;
+    std::cout << "**** Part 6 ****" << std::endl;
+    std::cout << std::endl;
+
     // FloatType
 
-    FloatType ft(1.6f);
+    FloatType fta(1.6f);
 
-    std::cout << std::endl;
-    std::cout << "\t\tFloatType\tft\t\t\t\t\t: " << ft << std::endl;
+    std::cout << "\t\tFloatType\tfta\t\t\t\t\t: " << fta << std::endl;
 
-    ft.apply([&ft](float& floatValue) -> FloatType&
+    fta.apply([&fta](float& floatValue) -> FloatType&
     {
         floatValue = floatValue * floatValue * floatValue;
-        return ft;
+        return fta;
     });
-    std::cout << "Cubed\tFloatType\tft (lambda)\t\t\t: " << ft << std::endl;
+    std::cout << "Cubed\tFloatType\tfta (lambda)\t\t: " << fta << std::endl;
 
-    ft.apply(freeFuncSquareFloat);
-    std::cout << "Squared\tFloatType\tft (free function)\t: " << ft << std::endl;
+    fta.apply(freeFuncSquareFloat);
+    std::cout << "Squared\tFloatType\tfta (free function)\t: " << fta << std::endl;
 
     // DoubleType
 
-    DoubleType dt(0.81234);
+    DoubleType dta(0.81234);
 
     std::cout << std::endl;
-    std::cout << "\t\tDoubleType\tdt\t\t\t\t\t: " << dt << std::endl;
+    std::cout << "\t\tDoubleType\tdta\t\t\t\t\t: " << dta << std::endl;
 
-    dt.apply([&dt](double& doubleValue) -> DoubleType&
+    dta.apply([&dta](double& doubleValue) -> DoubleType&
     {
         doubleValue = doubleValue * doubleValue * doubleValue;
-        return dt;
+        return dta;
     });
-    std::cout << "Cubed\tDoubleType\tdt (lambda)\t\t\t: " << dt << std::endl;
+    std::cout << "Cubed\tDoubleType\tdta (lambda)\t\t: " << dta << std::endl;
 
-    dt.apply(freeFuncSquareDouble);
-    std::cout << "Squared\tDoubleType\tdt (free function)\t: " << dt << std::endl;
+    dta.apply(freeFuncSquareDouble);
+    std::cout << "Squared\tDoubleType\tdta (free function)\t: " << dta << std::endl;
 
     // IntType
 
-    IntType it(3);
+    IntType ita(3);
 
     std::cout << std::endl;
-    std::cout << "\t\tIntType\t\tit\t\t\t\t\t: " << it << std::endl;
+    std::cout << "\t\tIntType\t\tita\t\t\t\t\t: " << ita << std::endl;
 
-    it.apply([&it](int& intValue) -> IntType&
+    ita.apply([&ita](int& intValue) -> IntType&
     {
         intValue = intValue * intValue * intValue;
-        return it;
+        return ita;
     });
-    std::cout << "Cubed\tIntType\t\tit (lambda)\t\t\t: " << it << std::endl;
+    std::cout << "Cubed\tIntType\t\tita (lambda)\t\t: " << ita << std::endl;
 
-    it.apply(freeFuncSquareInt);
-    std::cout << "Squared\tIntType\t\tit (free function)\t: " << it << std::endl;
+    ita.apply(freeFuncSquareInt);
+    std::cout << "Squared\tIntType\t\tita (free function)\t: " << ita << std::endl;
 
 // project4-part6 - END
 
 // ==============================
 
-/* project4-parts 1 - 5 - BEGIN
+    std::cout << std::endl;
+    std::cout << "**** Parts 1 - 5  ****" << std::endl;
+    std::cout << std::endl;
+
     {
     FloatType ft1(1.6f), ft2(-1.6f), ft3(1.6f), ft4(3.14f);
     DoubleType dt1(0.81234), dt2(0.81234), dt3(3.14);
     IntType it1(3), it2(2);
 
-    std::cout << std::endl;
     std::cout << "Tests - pow" << std::endl;
     std::cout << "-----------" << std::endl;
     std::cout << std::endl;
@@ -750,6 +755,4 @@ int main()
 
     //Tests from project4 parts - END 
     }
-// project4-parts 1 - 5 - END
-*/
 }
