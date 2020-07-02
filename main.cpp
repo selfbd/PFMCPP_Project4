@@ -455,51 +455,51 @@ int main()
     FloatType ft(1.6f);
 
     std::cout << std::endl;
-    std::cout << "\t\tFloatType ft\t\t\t\t\t: " << ft << std::endl;
+    std::cout << "\t\tFloatType\tft\t\t\t\t\t: " << ft << std::endl;
 
     ft.apply([&ft](float& floatValue) -> FloatType&
     {
         floatValue = floatValue * floatValue * floatValue;
         return ft;
     });
-    std::cout << "Cubed\tFloatType ft (lambda)\t\t\t: " << ft << std::endl;
+    std::cout << "Cubed\tFloatType\tft (lambda)\t\t\t: " << ft << std::endl;
 
     ft.apply(freeFuncSquareFloat);
-    std::cout << "Squared\tFloatType ft (free function)\t: " << ft << std::endl;
+    std::cout << "Squared\tFloatType\tft (free function)\t: " << ft << std::endl;
 
     // DoubleType
 
     DoubleType dt(0.81234);
 
     std::cout << std::endl;
-    std::cout << "\t\tDoubleType dt\t\t\t\t\t: " << dt << std::endl;
+    std::cout << "\t\tDoubleType\tdt\t\t\t\t\t: " << dt << std::endl;
 
     dt.apply([&dt](double& doubleValue) -> DoubleType&
     {
         doubleValue = doubleValue * doubleValue * doubleValue;
         return dt;
     });
-    std::cout << "Cubed\tDoubleType dt (lambda)\t\t\t: " << dt << std::endl;
+    std::cout << "Cubed\tDoubleType\tdt (lambda)\t\t\t: " << dt << std::endl;
 
     dt.apply(freeFuncSquareDouble);
-    std::cout << "Squared\tDoubleType dt (free function)\t: " << dt << std::endl;
+    std::cout << "Squared\tDoubleType\tdt (free function)\t: " << dt << std::endl;
 
     // IntType
 
     IntType it(3);
 
     std::cout << std::endl;
-    std::cout << "\t\tIntType it\t\t\t\t\t: " << it << std::endl;
+    std::cout << "\t\tIntType\t\tit\t\t\t\t\t: " << it << std::endl;
 
     it.apply([&it](int& intValue) -> IntType&
     {
         intValue = intValue * intValue * intValue;
         return it;
     });
-    std::cout << "Cubed\tIntType it (lambda)\t\t\t: " << it << std::endl;
+    std::cout << "Cubed\tIntType\t\tit (lambda)\t\t\t: " << it << std::endl;
 
     it.apply(freeFuncSquareInt);
-    std::cout << "Squared\tIntType it (free function)\t: " << it << std::endl;
+    std::cout << "Squared\tIntType\t\tit (free function)\t: " << it << std::endl;
 
 // project4-part6 - END
 
