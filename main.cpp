@@ -1,16 +1,7 @@
 /*
 Project 4 - Part 6 / 9
 Video: Chapter 5 Part 3
- 
-This step was completed in part 5, during the 'expected output' project revisions.
 
-
- 5) delete the example below after it makes sense how your code will change due to 1).
- */
-
-// example was here
-
-/*
 Create a branch named Part6
  
  Lambdas
@@ -191,7 +182,6 @@ struct IntType;
 
 struct Point
 {
-    Point(float x_, float y_);
     Point(const FloatType& x_, const FloatType& y_);
     Point(const DoubleType& x_, const DoubleType& y_);
     Point(const IntType& x_, const IntType& y_);
@@ -358,14 +348,14 @@ FloatType& FloatType::operator-=(float rhs)
 
 FloatType& FloatType::operator*=(float rhs)
 {
-    *ownedFloat -= rhs;
+    *ownedFloat *= rhs;
     return *this;
 }
 
 FloatType& FloatType::operator/=(float rhs)
 {
     if( std::abs(rhs - 0.0f) < 0.00001f)
-        std::cout << "Warning: Divide-by-zero attempt\n";
+        std::cout << "warning: floating point division by zero!\n";
     *ownedFloat /= rhs;
     return *this;
 }
@@ -439,7 +429,7 @@ DoubleType& DoubleType::operator*=(double rhs)
 DoubleType& DoubleType::operator/=(double rhs)
 {
     if( fabs(rhs - 0.0) < 0.00001)
-        std::cout << "Warning: Divide-by-zero attempt\n";
+        std::cout << "warning: floating point division by zero!\n";
     *ownedDouble /= rhs;
     return *this;
 }
@@ -514,7 +504,7 @@ IntType& IntType::operator/=(int rhs)
 {
     if(rhs == 0)
     {
-        std::cout << "Warning: Divide-by-zero attempt. Divide operation aborted.\n";
+        std::cout << "error: integer division by zero is an error and will crash the program!\n";
         return *this;
     }
     *ownedInt /= rhs;
@@ -525,10 +515,9 @@ IntType& IntType::operator/=(int rhs)
 
 // Point Implementations - BEGIN ======================
 
-Point::Point(float x_, float y_) : x(x_), y(y_) {}
-Point::Point(const FloatType& x_, const FloatType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
-Point::Point(const DoubleType& x_, const DoubleType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
-Point::Point(const IntType& x_, const IntType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
+Point::Point(const FloatType& x_, const FloatType& y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
+Point::Point(const DoubleType& x_, const DoubleType& y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
+Point::Point(const IntType& x_, const IntType& y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
 
 Point& Point::multiply(const FloatType& ft)
 {
@@ -545,7 +534,7 @@ Point& Point::multiply(const IntType& it)
     return multiply(static_cast<float>(it));
 }
 
-void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::endl; }
+void Point::toString() { std::cout << "Point { x: " << x << ", y: " << y << " }" << std::endl; }
 
 // Point Implementations - END ========================
 
@@ -562,7 +551,7 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
 
  Wait for my code review.
  */
-/*
+
 void part3()
 {
     FloatType ft( 5.5f );
@@ -570,18 +559,36 @@ void part3()
     IntType it ( 34 );
     DoubleType pi( 3.14 );
 
-    std::cout << "The result of FloatType^3 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
-    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
-    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( pi ).multiply( dt ).subtract( ft ) << std::endl;
-    std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
-    std::cout << it.multiply(it).divide(0).divide(0.0f).divide(0.0) << std::endl;
-    
-    std::cout << "FloatType x IntType  =  " << it.multiply( ft ) << std::endl;
-    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( dt ).add( ft ).multiply( 24 ) << std::endl;
-}
-*/
+    ft *= ft;
+    ft *= ft;
+    ft /= it;
+    std::cout << "The result of FloatType^4 divided by IntType is: " << ft << std::endl;
 
-/*
+    dt *= 3;
+    dt += it;
+    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt << std::endl;
+
+    it /= static_cast<int>(M_PI);
+    it *= static_cast<int>(dt);
+    it -= static_cast<int>(ft);
+    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it << std::endl;
+ 
+    std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
+    it *= it;
+    it /= 0;
+    it /= 0.0f;
+    it /= 0.0;
+    std::cout << it << std::endl;
+    
+    it *= static_cast<int>(ft);
+    std::cout << "FloatType x IntType  =  " << it << std::endl;
+
+    it += static_cast<int>(dt);
+    it += static_cast<int>(ft);
+    it *= 24;
+    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it << std::endl;
+}
+
 void part4()
 {
     // ------------------------------------------------------------
@@ -665,7 +672,6 @@ void part4()
     p3.toString();   
     std::cout << "---------------------\n" << std::endl;
 }
-*/
 
 // Free functions for part6
 
@@ -723,66 +729,63 @@ void part6()
 
 int main()
 {   
-    // Is this necessary? heapA doesn't seem to be used
-    //testing instruction 0
-    //HeapA heapA; 
-
-/*
     //assign heap primitives
     FloatType ft ( 2.0f );
     DoubleType dt ( 2 );
     IntType it ( 2 ) ;
 
-    std::cout << "FloatType add result=" << ft.add( 2.0f ).value << std::endl;
-    std::cout << "FloatType subtract result=" << ft.subtract( 2.0f ).value << std::endl;
-    std::cout << "FloatType multiply result=" << ft.multiply( 2.0f ).value << std::endl;
-    std::cout << "FloatType divide result=" << ft.divide( 16.0f).value << std::endl << std::endl;
+    std::cout << "FloatType add result=" << ( ft += 2.0f ) << std::endl;
+    std::cout << "FloatType subtract result=" << ( ft -= 2.0f ) << std::endl;
+    std::cout << "FloatType multiply result=" << ( ft *= 2.0f ) << std::endl;
+    std::cout << "FloatType divide result=" << ( ft /= 16.0f ) << std::endl << std::endl;
 
-    std::cout << "DoubleType add result=" << dt.add(2.0).value << std::endl;
-    std::cout << "DoubleType subtract result=" << dt.subtract(2.0).value << std::endl;
-    std::cout << "DoubleType multiply result=" << dt.multiply(2.0).value << std::endl;
-    std::cout << "DoubleType divide result=" << dt.divide(5.f).value << std::endl << std::endl;
+    std::cout << "DoubleType add result=" << ( dt += 2.0 ) << std::endl;
+    std::cout << "DoubleType subtract result=" << ( dt -= 2.0 ) << std::endl;
+    std::cout << "DoubleType multiply result=" << ( dt *= 2.0 ) << std::endl;
+    std::cout << "DoubleType divide result=" << ( dt /= 5.0 ) << std::endl << std::endl;
 
-    std::cout << "IntType add result=" << it.add(2).value << std::endl;
-    std::cout << "IntType subtract result=" << it.subtract(2).value << std::endl;
-    std::cout << "IntType multiply result=" << it.multiply(2).value << std::endl;
-    std::cout << "IntType divide result=" << it.divide(3).value << std::endl << std::endl;
-    std::cout << "Chain calculation = " << (it.multiply(1000).divide(2).subtract(10).add(100)).value << std::endl;
+    std::cout << "IntType add result=" << ( it += 2 ) << std::endl;
+    std::cout << "IntType subtract result=" << ( it -= 2 ) << std::endl;
+    std::cout << "IntType multiply result=" << ( it *= 2 ) << std::endl;
+    std::cout << "IntType divide result=" << ( it /= 3 ) << std::endl << std::endl;
+    it *= 1000;
+    it /= 2;
+    it -= 10;
+    it += 100;
+    std::cout << "Chain calculation = " << it << std::endl;
 
-        // FloatType object instanciation and method tests
+    // FloatType object instanciation and method tests
     // --------
-    std::cout << "New value of ft = (ft + 3.0f) * 1.5f / 5.0f = " << ft.add( 3.0f ).multiply(1.5f).divide(5.0f).value << std::endl;
-       
+    ft += 3.0f;
+    ft *= 1.5f;
+    ft /= 5.0f;
+    std::cout << "New value of ft = (ft + 3.0f) * 1.5f / 5.0f = " << ft << std::endl;
     std::cout << "---------------------\n" << std::endl; 
-    
+
     // DoubleType/IntType object instanciation and method tests
     // --------
-    std::cout << "Initial value of dt: " << dt.value << std::endl;
-    std::cout << "Initial value of it: " << it.value << std::endl;
+    std::cout << "Initial value of dt: " << dt<< std::endl;
+    std::cout << "Initial value of it: " << it << std::endl;
     // --------
     std::cout << "Use of function concatenation (mixed type arguments) " << std::endl;
-    std::cout << "New value of dt = (dt * it) / 5.0f + ft = " << (dt.multiply(it).divide(5.0f).add(ft).value) << std::endl;
-
+    dt *= it;
+    dt /= 5.0;
+    dt += static_cast<double>(ft);
+    std::cout << "New value of dt = (dt * it) / 5.0f + ft = " << dt << std::endl;
     std::cout << "---------------------\n" << std::endl; 
-    
+
     // Intercept division by 0
     // --------
     std::cout << "Intercept division by 0 " << std::endl;
-    std::cout << "New value of it = it / 0 = " << it.divide(0).value << std::endl;
-    std::cout << "New value of ft = ft / 0 = " << ft.divide(0).value << std::endl;
-    std::cout << "New value of dt = dt / 0 = " << dt.divide(0).value << std::endl;
-
+    std::cout << "New value of it = it / 0 = " << ( it /= 0 ) << std::endl;
+    std::cout << "New value of ft = ft / 0 = " << ( ft /= 0 ) << std::endl;
+    std::cout << "New value of dt = dt / 0 = " << ( dt /= 0 ) << std::endl;
     std::cout << "---------------------\n" << std::endl; 
 
     part3();
     part4();
-
-*/
-
-
     part6();
 
     std::cout << "good to go!\n";
-
     return 0;
 }
