@@ -8,29 +8,8 @@ This step was completed in part 5, during the 'expected output' project revision
  5) delete the example below after it makes sense how your code will change due to 1).
  */
 
-namespace Example
-{
-    int main()
-    {
-        FloatType floatNum(4.3f);
-        IntType intNum(2);
-        IntType intNum2(6);
+// example was here
 
-        /* 
-        if you previously had a line like this demonstrating chaining:
-            
-            intNum.add(3).add(4.5f).divide(floatNum); 
-
-        it should become:
-        */
-        intNum += 3;
-        intNum += 4.5f;
-        intNum /= floatNum;
-        std::cout << "intNum: " << intNum << std::endl;
-        
-        return 0;
-    }
-}
 /*
 Create a branch named Part6
  
@@ -199,8 +178,6 @@ good to go!
 
 Use a service like https://www.diffchecker.com/diff to compare your output. 
 */
-
-
 
 #include <iostream>
 #include <cmath>
@@ -585,22 +562,7 @@ void Point::toString() { std::cout << " : (" << x << "," << y << ")" << std::end
 
  Wait for my code review.
  */
-
-void freeFuncSquareFloat (float& floatValue)
-{
-    floatValue = floatValue * floatValue;
-}
-
-void freeFuncSquareDouble (double& doubleValue)
-{
-    doubleValue = doubleValue * doubleValue;
-}
-
-void freeFuncSquareInt (int& intValue)
-{
-    intValue = intValue * intValue;
-}
-
+/*
 void part3()
 {
     FloatType ft( 5.5f );
@@ -617,7 +579,9 @@ void part3()
     std::cout << "FloatType x IntType  =  " << it.multiply( ft ) << std::endl;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( dt ).add( ft ).multiply( 24 ) << std::endl;
 }
+*/
 
+/*
 void part4()
 {
     // ------------------------------------------------------------
@@ -701,6 +665,24 @@ void part4()
     p3.toString();   
     std::cout << "---------------------\n" << std::endl;
 }
+*/
+
+// Free functions for part6
+
+void myFloatFreeFunct (float& floatValue)
+{
+    floatValue += 7.0f;
+}
+
+void myDoubleFreeFunct (double& doubleValue)
+{
+    doubleValue += 6.0;
+}
+
+void myIntFreeFunct (int& intValue)
+{
+    intValue += 5;;
+}
 
 void part6()
 {
@@ -710,7 +692,7 @@ void part6()
     
     std::cout << "Calling FloatType::apply() using a lambda (adds 7.0f) and FloatType as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
-    ft3.apply( [](){} );
+    ft3.apply( [&ft3](float& floatValue) -> FloatType& { floatValue += 7.0f; return ft3; } );
     std::cout << "ft3 after: " << ft3 << std::endl;
     std::cout << "Calling FloatType::apply() using a free function (adds 7.0f) and void as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
@@ -720,7 +702,7 @@ void part6()
 
     std::cout << "Calling DoubleType::apply() using a lambda (adds 6.0) and DoubleType as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
-    dt3.apply( [](){} );
+    dt3.apply( [&dt3](double& doubleValue) -> DoubleType& { doubleValue += 6.0; return dt3;} );
     std::cout << "dt3 after: " << dt3 << std::endl;
     std::cout << "Calling DoubleType::apply() using a free function (adds 6.0) and void as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
@@ -730,20 +712,22 @@ void part6()
 
     std::cout << "Calling IntType::apply() using a lambda (adds 5) and IntType as return type:" << std::endl;
     std::cout << "it3 before: " << it3 << std::endl;
-    it3.apply( [](){} );
+    it3.apply( [&it3] (int& intValue) -> IntType& { intValue += 5; return it3; } );
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "Calling IntType::apply() using a free function (adds 5) and void as return type:" << std::endl;
     std::cout << "it3 before: " << it3 << std::endl;
     it3.apply(myIntFreeFunct);
     std::cout << "it3 after: " << it3 << std::endl;
-    std::cout << "---------------------\n" << std::endl;    
+    std::cout << "---------------------\n" << std::endl;   
 }
 
 int main()
 {   
+    // Is this necessary? heapA doesn't seem to be used
     //testing instruction 0
-    HeapA heapA; 
+    //HeapA heapA; 
 
+/*
     //assign heap primitives
     FloatType ft ( 2.0f );
     DoubleType dt ( 2 );
@@ -792,6 +776,9 @@ int main()
 
     part3();
     part4();
+
+*/
+
 
     part6();
 
