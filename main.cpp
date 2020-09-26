@@ -159,14 +159,15 @@ New value of dt = (dt * it) / 5.0f + ft = 95.375
 ---------------------
 
 Intercept division by 0 
-New value of it = it / 0 = can't divide integers by zero!
+New value of it = it / 0 = error: integer division by zero is an error and will crash the program!
 590
-New value of ft = ft / 0 = inf
+New value of ft = ft / 0 = warning: floating point division by zero!
+inf
 New value of dt = dt / 0 = warning: floating point division by zero!
 inf
 ---------------------
 
-The result of FloatType^4 divided by IntType is: 26.9136
+The result of FloatType^3 divided by IntType is: 26.9136
 The result of DoubleType times 3 plus IntType is : 67.3
 The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: 711
 An operation followed by attempts to divide by 0, which are ignored and warns user: 
@@ -209,7 +210,7 @@ Multiplication factor: 3
 Point { x: 9, y: 9 }
 ---------------------
 
-Point tests with FloatType argument:
+Point tests with DoubleType argument:
 Point { x: 3, y: 4 }
 Multiplication factor: 4
 Point { x: 12, y: 16 }
