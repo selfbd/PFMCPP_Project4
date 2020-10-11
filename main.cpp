@@ -259,7 +259,8 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <functional>
 #include <memory>
 
-// Primary NumericType template
+// Primary NumericType template - BEGIN =================================
+
 template<typename NumericType>                                  // #2
 struct Numeric
 {
@@ -330,6 +331,40 @@ private:
         return *this;
     }
 };
+
+// Primary NumericType template - END ===================================
+
+template<typename NumericType>                                  // #5
+void cube( std::unique_ptr<NumericType>& un )
+{
+    NumericType& i = *un;
+    i = i * i * i;                                              // #8
+}
+
+// Explicit specialization for Double - BEGIN ===========================
+
+template<>                                                      // #6
+struct Numeric<double>
+{
+    using Type = double;
+    Numeric(Type d) : ud( std::make_unique<Type>(d) ) { }
+    operator Type() const { return *ud; }
+
+    template<typename Callable>                                 // #7
+    Numeric& apply(Callable&& f)
+    {
+        f(ud);
+        return *this;
+    }
+
+private:
+    std::unique_ptr<Type> ud;
+};
+
+// Explicit specialization for Double - END =============================
+
+
+
 
 // =============================================================
 
@@ -904,20 +939,20 @@ int main()
     using NumericType = decltype(i)::Type;                              // #4
     using ReturnType = decltype(i);
 
-/*     i.apply( [&i](std::unique_ptr<NumericType>& ui) -> ReturnType&
+    i.apply( [&i](std::unique_ptr<NumericType>& ui) -> ReturnType&
     {
         *ui = *ui * *ui;
         return i;
-    })                                                                  // #4
+    });                                                                  // #4
 
     std::cout << "square Int (lambda): " << i << std::endl;
-    i.apply ( cube; )
+    i.apply ( cube );
     std::cout << "cube Int: " << i << std::endl;
 
     std::cout << "//================================" << std::endl;
     std::cout << "//================================" << std::endl;
     std::cout << "//================================" << std::endl;
- */
+
 
 
 
