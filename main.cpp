@@ -294,9 +294,31 @@ struct Numeric
     }
  */
 
+
     Numeric& pow(const Type& v)
     {
         return powInternal( static_cast<Type>(v) );
+    }
+
+
+    Numeric& apply( std::function<Numeric&(std::unique_ptr<Type>&)> f)
+    {
+        std::cout << "std::function<>" << std::endl;
+        if( f )
+        {
+            return f(un);
+        }
+        return *this;
+    }
+
+    Numeric& apply( void(*f)(std::unique_ptr<Type>&) )          // #5     
+    {
+        std::cout << "free function" << std::endl;
+        if( f )
+        {
+            f(un);
+        }
+        return *this; 
     }
 
 private:
