@@ -259,6 +259,24 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <functional>
 #include <memory>
 
+template<typename NumericType>                                  // #2
+struct Numeric
+{
+    using Type = NumericType;                                   // #3
+    Numeric(Type v) : un( std::make_unique<Type>(v) ) { }
+    //FloatType& operator=(const FloatType&);  ToDo: implement this? Needed?
+    operator Type() const { return *un; }
+
+    // ToDo: overload operators
+
+private:
+    std::unique_ptr<Type> un;                                   // #1
+};
+
+
+
+// =============================================================
+
 struct FloatType;
 struct DoubleType;
 struct IntType;
@@ -764,7 +782,7 @@ void part4()
     std::cout << "---------------------\n" << std::endl;
 }
 
-/*
+/* #0 - BEGIN
 // Free functions for part6
 
 void myFloatFreeFunct (float& floatValue)
@@ -818,6 +836,7 @@ void part6()
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;   
 }
+#0 - END
 */
 
 int main()
