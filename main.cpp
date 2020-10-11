@@ -259,21 +259,55 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <functional>
 #include <memory>
 
+// Primary NumericType template
 template<typename NumericType>                                  // #2
 struct Numeric
 {
     using Type = NumericType;                                   // #3
     Numeric(Type v) : un( std::make_unique<Type>(v) ) { }
-    //FloatType& operator=(const FloatType&);  ToDo: implement this? Needed?
     operator Type() const { return *un; }
 
-    // ToDo: overload operators
+    Numeric& operator+=(Type v)
+    {
+        *un += v;
+        return *this;
+    }
+
+    Numeric& operator-=(Type v)
+    {
+        *un -= v;
+        return *this;
+    }
+
+    Numeric& operator*=(Type v)
+    {
+        *un *= v;
+        return *this;
+    }
+
+/*     FloatType& operator/=(float rhs)
+    {
+        if( std::abs(rhs - 0.0f) < 0.00001f)
+            std::cout << "warning: floating point division by zero!\n";
+        *ownedFloat /= rhs;
+        return *this;
+    }
+ */
+
+    Numeric& pow(const Type& v)
+    {
+        return powInternal( static_cast<Type>(v) );
+    }
 
 private:
     std::unique_ptr<Type> un;                                   // #1
+
+    Numeric& powInternal(const Type v)
+    {
+        *un = static_cast<Type>( std::pow(*un, v) );
+        return *this;
+    }
 };
-
-
 
 // =============================================================
 
