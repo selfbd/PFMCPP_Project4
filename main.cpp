@@ -875,6 +875,30 @@ void part6()
 
 int main()
 {   
+    Numeric<int> i(3);
+
+    std::cout << "NumericWrapper: " << i << std::endl;
+
+    using NumericType = decltype(i)::Type;                              // #4
+    using ReturnType = decltype(i);
+
+/*     i.apply( [&i](std::unique_ptr<NumericType>& ui) -> ReturnType&
+    {
+        *ui = *ui * *ui;
+        return i;
+    })                                                                  // #4
+
+    std::cout << "square Int (lambda): " << i << std::endl;
+    i.apply ( cube; )
+    std::cout << "cube Int: " << i << std::endl;
+
+    std::cout << "//================================" << std::endl;
+    std::cout << "//================================" << std::endl;
+    std::cout << "//================================" << std::endl;
+ */
+
+
+
     //assign heap primitives
     FloatType ft ( 2.0f );
     DoubleType dt ( 2 );
