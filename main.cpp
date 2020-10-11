@@ -76,6 +76,7 @@ Templates and Containers
 If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptasks/src/master/Projects/Project4/Part7Example.cpp
 */
 
+/*
 void part7()
 {
     Numeric ft3(3.0f);
@@ -126,6 +127,7 @@ void part7()
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
 }
+*/
 
 /*
 your program should generate the following output EXACTLY.
@@ -255,6 +257,7 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <iostream>
 #include <cmath>
 #include <functional>
+#include <memory>
 
 struct FloatType;
 struct DoubleType;
@@ -286,8 +289,9 @@ private:
 
 struct FloatType
 {
-    FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
-    ~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
+    //FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
+    FloatType(float floatValue) : ownedFloat( std::make_unique<float>(floatValue) ) {}
+    //~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
     FloatType& operator=(const FloatType&);
 
     operator float() const { return *ownedFloat; }
@@ -308,14 +312,16 @@ struct FloatType
     FloatType& operator/=(float rhs);
 
 private:
-    float* ownedFloat;
+    // float* ownedFloat;
+    std::unique_ptr<float> ownedFloat;
     FloatType& powInternal(const float value);
 };
 
 struct DoubleType
 {    
-    DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
-    ~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
+    //DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
+    DoubleType(double doubleValue) : ownedDouble( std::make_unique<double>(doubleValue) ) {}
+    //~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
     DoubleType& operator=(const DoubleType&);
 
     operator double() const { return *ownedDouble; }
@@ -336,14 +342,16 @@ struct DoubleType
     DoubleType& operator/=(double rhs);
 
 private:
-    double* ownedDouble;
+    std::unique_ptr<double> ownedDouble;
+    //double* ownedDouble;
     DoubleType& powInternal(const double value);
 };
 
 struct IntType
 {
-    IntType(int intValue) : ownedInt(new int(intValue)) {}
-    ~IntType() { delete ownedInt; ownedInt = nullptr; }
+    IntType(int intValue) : ownedInt( std::make_unique<int>(intValue) ) {}
+    //IntType(int intValue) : ownedInt(new int(intValue)) {}
+    //~IntType() { delete ownedInt; ownedInt = nullptr; }
     IntType& operator=(const IntType&);
 
     operator int() const { return *ownedInt; }
@@ -364,7 +372,8 @@ struct IntType
     IntType& operator/=(int rhs);
 
 private:
-    int* ownedInt;
+    std::unique_ptr<int> ownedInt;
+    //int* ownedInt;
     IntType& powInternal(const int value);
 };
 
@@ -755,6 +764,7 @@ void part4()
     std::cout << "---------------------\n" << std::endl;
 }
 
+/*
 // Free functions for part6
 
 void myFloatFreeFunct (float& floatValue)
@@ -808,6 +818,7 @@ void part6()
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;   
 }
+*/
 
 int main()
 {   
@@ -866,7 +877,7 @@ int main()
 
     part3();
     part4();
-    part6();
+    // part6();
 
     std::cout << "good to go!\n";
     return 0;
