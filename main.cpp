@@ -286,16 +286,42 @@ struct Numeric
         return *this;
     }
 
-// ToDo
-/*     FloatType& operator/=(float rhs)
+    template<typename DivisorType>
+    Numeric& operator/=(const DivisorType& v)
     {
-        if( std::abs(rhs - 0.0f) < 0.00001f)
-            std::cout << "warning: floating point division by zero!\n";
-        *ownedFloat /= rhs;
+        // If struct Numeric template type is int
+        if constexpr ( std::is_same<Type, int>::value )
+        {
+            // If parameter's type is also an int
+            if constexpr ( std::is_same<DivisorType, int>::value )
+            {
+                // If parameter is 0
+                if (v == 0)
+                {
+                   // Don't do the division 
+                   std::cout << "error: integer division by zero is an error and will crash the program!" << std::endl;
+                   return *this;
+                }
+            }
+            // Else if parameter is less than epsilon
+            else if ( v < std::numeric_limits<DivisorType>::epsilon() )
+            {
+                // Don't do the division 
+                std::cout << "can't divide integers by zero!" << std::endl;
+                return *this;
+            }
+        }
+        // Template type is not an int
+        // Else if parameter is less than epsilon
+        else if ( v < std::numeric_limits<Type>::epsilon() )
+        {
+            // Warn about doing the division 
+            std::cout << "warning: floating point division by zero!" << std::endl;
+        }
+
+        *un /= v;
         return *this;
     }
- */
-
 
     Numeric& pow(const Type& v)
     {
@@ -304,7 +330,6 @@ struct Numeric
 
     Numeric& apply( std::function<Numeric&(std::unique_ptr<Type>&)> f)
     {
-        std::cout << "std::function<>" << std::endl;
         if( f )
         {
             return f(un);
@@ -314,7 +339,6 @@ struct Numeric
 
     Numeric& apply( void(*f)(std::unique_ptr<Type>&) )          // #5     
     {
-        std::cout << "free function" << std::endl;
         if( f )
         {
             f(un);
@@ -361,6 +385,16 @@ struct Numeric<double>
         return *this;
     }
 
+    Numeric& operator/=(const Type v)
+    {
+        if( fabs(v - 0.0) < std::numeric_limits<Type>::epsilon() )
+        {
+            std::cout << "warning: floating point division by zero!" << std::endl;
+        }
+        *ud /= v;
+        return *this;
+    }
+
     Numeric& pow(const Type& v)
     {
         return powInternal( static_cast<Type>(v) );
@@ -401,19 +435,6 @@ void cube( std::unique_ptr<NumericType>& un )
 
 // Free Functions - END =================================================
 
-
-
-
-/*
-// =============================================================
-
-struct FloatType;
-struct DoubleType;
-struct IntType;
-
-*/
-
-
 // Point - BEGIN ========================================================
 
 struct Point
@@ -443,358 +464,6 @@ private:
 // Point - END ==========================================================
 
 /*
-struct FloatType
-{
-    //FloatType(float floatValue) : ownedFloat(new float(floatValue)) {}
-    FloatType(float floatValue) : ownedFloat( std::make_unique<float>(floatValue) ) {}
-    //~FloatType() { delete ownedFloat; ownedFloat = nullptr; }
-    FloatType& operator=(const FloatType&);
-
-    operator float() const { return *ownedFloat; }
-
-    FloatType& apply(std::function<FloatType&(float&)>);
-
-    using FloatFuncPtr = void(*)(float&);
-    FloatType& apply(FloatFuncPtr);
-
-    FloatType& pow(float rhs);
-    FloatType& pow(const FloatType& rhs);
-    FloatType& pow(const DoubleType& rhs);
-    FloatType& pow(const IntType& rhs);
-
-    FloatType& operator+=(float rhs);
-    FloatType& operator-=(float rhs);
-    FloatType& operator*=(float rhs);
-    FloatType& operator/=(float rhs);
-
-private:
-    // float* ownedFloat;
-    std::unique_ptr<float> ownedFloat;
-    FloatType& powInternal(const float value);
-};
-
-struct DoubleType
-{    
-    //DoubleType(double doubleValue) : ownedDouble(new double(doubleValue)) {}
-    DoubleType(double doubleValue) : ownedDouble( std::make_unique<double>(doubleValue) ) {}
-    //~DoubleType() { delete ownedDouble; ownedDouble = nullptr; }
-    DoubleType& operator=(const DoubleType&);
-
-    operator double() const { return *ownedDouble; }
-
-    DoubleType& apply(std::function<DoubleType&(double&)>);
-
-    using DoubleFuncPtr = void(*)(double&);
-    DoubleType& apply(DoubleFuncPtr);
-
-    DoubleType& pow(double rhs);
-    DoubleType& pow(const FloatType& rhs);
-    DoubleType& pow(const DoubleType& rhs);
-    DoubleType& pow(const IntType& rhs);
-
-    DoubleType& operator+=(double rhs);
-    DoubleType& operator-=(double rhs);
-    DoubleType& operator*=(double rhs);
-    DoubleType& operator/=(double rhs);
-
-private:
-    std::unique_ptr<double> ownedDouble;
-    //double* ownedDouble;
-    DoubleType& powInternal(const double value);
-};
-
-struct IntType
-{
-    IntType(int intValue) : ownedInt( std::make_unique<int>(intValue) ) {}
-    //IntType(int intValue) : ownedInt(new int(intValue)) {}
-    //~IntType() { delete ownedInt; ownedInt = nullptr; }
-    IntType& operator=(const IntType&);
-
-    operator int() const { return *ownedInt; }
-
-    IntType& apply(std::function<IntType&(int&)>);
-
-    using IntFuncPtr = void(*)(int&);
-    IntType& apply(IntFuncPtr);
-
-    IntType& pow(int rhs);
-    IntType& pow(const FloatType& rhs);
-    IntType& pow(const DoubleType& rhs);
-    IntType& pow(const IntType& rhs);
-
-    IntType& operator+=(int rhs);
-    IntType& operator-=(int rhs);
-    IntType& operator*=(int rhs);
-    IntType& operator/=(int rhs);
-
-private:
-    std::unique_ptr<int> ownedInt;
-    //int* ownedInt;
-    IntType& powInternal(const int value);
-};
-
-// Type Declarations - END ============================
-*/
-
-/*
-// FloatType Implementations - BEGIN ==================
-
-FloatType& FloatType::apply(std::function<FloatType&(float&)> floatFunc)
-{
-    if(floatFunc)
-    {
-        return floatFunc(*ownedFloat);
-    }
-    return *this;
-}
-
-FloatType& FloatType::apply(FloatFuncPtr floatFuncPtr)
-{
-    if(floatFuncPtr)
-    {
-        floatFuncPtr(*ownedFloat);
-    }
-    return *this; 
-}
-
-FloatType& FloatType::powInternal(const float value)
-{
-    *ownedFloat = std::pow(*ownedFloat, value);
-    return *this;
-}
-
-FloatType& FloatType::pow(float rhs)
-{
-    return powInternal(rhs);
-}
-
-FloatType& FloatType::pow(const FloatType& rhs)
-{
-    return powInternal(static_cast<float>(rhs));
-}
-
-FloatType& FloatType::pow(const DoubleType& rhs)
-{
-    return powInternal(static_cast<float>(rhs));
-}
-
-FloatType& FloatType::pow(const IntType& rhs)
-{
-    return powInternal(static_cast<float>(rhs));
-}
-
-FloatType& FloatType::operator+=(float rhs)
-{
-    *ownedFloat += rhs;
-    return *this;
-}
-
-FloatType& FloatType::operator-=(float rhs)
-{
-    *ownedFloat -= rhs;
-    return *this;
-}
-
-FloatType& FloatType::operator*=(float rhs)
-{
-    *ownedFloat *= rhs;
-    return *this;
-}
-
-FloatType& FloatType::operator/=(float rhs)
-{
-    if( std::abs(rhs - 0.0f) < 0.00001f)
-        std::cout << "warning: floating point division by zero!\n";
-    *ownedFloat /= rhs;
-    return *this;
-}
-
-// FloatType Implementations - END ====================
-*/
-
-/*
-// DoubleType Implementations - BEGIN =================
-
-DoubleType& DoubleType::apply(std::function<DoubleType&(double&)> doubleFunc)
-{
-    if(doubleFunc)
-    {
-        return doubleFunc(*ownedDouble);
-    }
-    return *this;
-}
-
-DoubleType& DoubleType::apply(DoubleFuncPtr doubleFuncPtr)
-{
-    if(doubleFuncPtr)
-    {
-        doubleFuncPtr(*ownedDouble);
-    }
-    return *this; 
-}
-
-DoubleType& DoubleType::powInternal(const double value)
-{
-    *ownedDouble = std::pow(*ownedDouble, value);
-    return *this;
-}
-
-DoubleType& DoubleType::pow(double rhs)
-{
-    return powInternal(rhs);
-}
-
-DoubleType& DoubleType::pow(const FloatType& rhs)
-{
-    return powInternal(static_cast<double>(rhs));
-}
-
-DoubleType& DoubleType::pow(const DoubleType& rhs)
-{
-    return powInternal(static_cast<double>(rhs));
-}
-
-DoubleType& DoubleType::pow(const IntType& rhs)
-{
-    return powInternal(static_cast<double>(rhs));
-}
-
-DoubleType& DoubleType::operator+=(double rhs)
-{
-    *ownedDouble += rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::operator-=(double rhs)
-{
-    *ownedDouble -= rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::operator*=(double rhs)
-{
-    *ownedDouble *= rhs;
-    return *this;
-}
-
-DoubleType& DoubleType::operator/=(double rhs)
-{
-    if( fabs(rhs - 0.0) < 0.00001)
-        std::cout << "warning: floating point division by zero!\n";
-    *ownedDouble /= rhs;
-    return *this;
-}
-
-// DoubleType Implementations - END ===================
-*/
-
-/*
-// IntType Implementations - BEGIN ====================
-
-IntType& IntType::apply(std::function<IntType&(int&)> intFunc)
-{
-    if(intFunc)
-    {
-        return intFunc(*ownedInt);
-    }
-    return *this;
-}
-
-IntType& IntType::apply(IntFuncPtr intFuncPtr)
-{
-    if(intFuncPtr)
-    {
-        intFuncPtr(*ownedInt);
-    }
-    return *this; 
-}
-
-IntType& IntType::powInternal(const int value)
-{
-    *ownedInt = static_cast<int>(std::pow(*ownedInt, value));
-    return *this;
-}
-
-IntType& IntType::pow(int rhs)
-{
-    return powInternal(rhs);
-}
-
-IntType& IntType::pow(const FloatType& rhs)
-{
-    return powInternal(static_cast<int>(rhs));
-}
-
-IntType& IntType::pow(const DoubleType& rhs)
-{
-    return powInternal(static_cast<int>(rhs));
-}
-
-IntType& IntType::pow(const IntType& rhs)
-{
-    return powInternal(static_cast<int>(rhs));
-}
-
-IntType& IntType::operator+=(int rhs)
-{
-    *ownedInt += rhs;
-    return *this;
-}
-
-IntType& IntType::operator-=(int rhs)
-{
-    *ownedInt -= rhs;
-    return *this;
-}
-
-IntType& IntType::operator*=(int rhs)
-{
-    *ownedInt *= rhs;
-    return *this;
-}
-
-IntType& IntType::operator/=(int rhs)
-{
-    if(rhs == 0)
-    {
-        std::cout << "error: integer division by zero is an error and will crash the program!\n";
-        return *this;
-    }
-    *ownedInt /= rhs;
-    return *this;
-}
-
-// IntType Implementations - END ======================
-*/
-
-/*
-// Point Implementations - BEGIN ======================
-
-Point::Point(const FloatType& x_, const FloatType& y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
-Point::Point(const DoubleType& x_, const DoubleType& y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
-Point::Point(const IntType& x_, const IntType& y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
-
-Point& Point::multiply(const FloatType& ft)
-{
-    return multiply(static_cast<float>(ft));
-}
-
-Point& Point::multiply(const DoubleType& dt)
-{
-    return multiply(static_cast<float>(dt));
-}
-
-Point& Point::multiply(const IntType& it)
-{
-    return multiply(static_cast<float>(it));
-}
-
-void Point::toString() { std::cout << "Point { x: " << x << ", y: " << y << " }" << std::endl; }
-
-// Point Implementations - END ========================
-*/
-
-/*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
  Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
@@ -817,23 +486,23 @@ void part3()
 
     ft *= ft;
     ft *= ft;
-    //ft /= it;   // To do
-    std::cout << "The result of FloatType^4 divided by IntType is: " << ft << std::endl;
+    ft /= it;
+    std::cout << "The result of FloatType^3 divided by IntType is: " << ft << std::endl;
 
     dt *= 3;
     dt += it;
     std::cout << "The result of DoubleType times 3 plus IntType is : " << dt << std::endl;
 
-    //it /= static_cast<int>(M_PI);
+    it /= static_cast<int>(M_PI);
     it *= static_cast<int>(dt);
     it -= static_cast<int>(ft);
     std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it << std::endl;
  
     std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
     it *= it;
-    //it /= 0;
-    //it /= 0.0f;
-    //it /= 0.0;
+    it /= 0;
+    it /= 0.0f;
+    it /= 0.0;
     std::cout << it << std::endl;
     
     it *= static_cast<int>(ft);
@@ -865,14 +534,14 @@ void part4()
     std::cout << "pow(ft1, floatExp) = " << ft1 << "^" << floatExp << " = " << ft1.pow(floatExp)  << std::endl;
     std::cout << "pow(ft1, itExp) = " << ft1 << "^" << itExp << " = " << ft1.pow(itExp)  << std::endl;
     std::cout << "pow(ft1, ftExp) = " << ft1 << "^" << ftExp << " = " << ft1.pow(ftExp)  << std::endl;    
-    std::cout << "pow(ft1, dtExp) = " << ft1 << "^" << dtExp << " = " << ft1.pow(dtExp)  << std::endl;    
+    std::cout << "pow(ft1, dtExp) = " << ft1 << "^" << dtExp << " = " << ft1.pow(static_cast<float>(dtExp))  << std::endl;    
     std::cout << "---------------------\n" << std::endl;  
 
     // Power tests with DoubleType
     std::cout << "Power tests with DoubleType " << std::endl;
     std::cout << "pow(dt1, doubleExp) = " << dt1 << "^" << doubleExp << " = " << dt1.pow(intExp)  << std::endl;
     std::cout << "pow(dt1, itExp) = " << dt1 << "^" << itExp << " = " << dt1.pow(itExp)  << std::endl;
-    std::cout << "pow(dt1, ftExp) = " << dt1 << "^" << ftExp << " = " << dt1.pow(ftExp)  << std::endl;    
+    std::cout << "pow(dt1, ftExp) = " << dt1 << "^" << ftExp << " = " << dt1.pow(static_cast<double>(ftExp))  << std::endl;    
     std::cout << "pow(dt1, dtExp) = " << dt1 << "^" << dtExp << " = " << dt1.pow(dtExp)  << std::endl;    
     std::cout << "---------------------\n" << std::endl;    
 
@@ -880,8 +549,8 @@ void part4()
     std::cout << "Power tests with IntType " << std::endl;
     std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)  << std::endl;
     std::cout << "pow(it1, itExp) = " << it1 << "^" << itExp << " = " << it1.pow(itExp)  << std::endl;
-    std::cout << "pow(it1, ftExp) = " << it1 << "^" << ftExp << " = " << it1.pow(ftExp)  << std::endl;    
-    std::cout << "pow(it1, dtExp) = " << it1 << "^" << dtExp << " = " << it1.pow(dtExp)  << std::endl;    
+    std::cout << "pow(it1, ftExp) = " << it1 << "^" << ftExp << " = " << it1.pow(static_cast<int>(ftExp))  << std::endl;    
+    std::cout << "pow(it1, dtExp) = " << it1 << "^" << dtExp << " = " << it1.pow(static_cast<int>(dtExp))  << std::endl;    
     std::cout << "===============================\n" << std::endl; 
 
     // ------------------------------------------------------------
@@ -1052,30 +721,9 @@ void part7()
 
 int main()
 {   
-    Numeric<int> i(3);
-
-    std::cout << "NumericWrapper: " << i << std::endl;
-
-    using NumericType = decltype(i)::Type;                              // #4
-    using ReturnType = decltype(i);
-
-    i.apply( [&i](std::unique_ptr<NumericType>& ui) -> ReturnType&
-    {
-        *ui = *ui * *ui;
-        return i;
-    });                                                                 // #4
-
-    std::cout << "square Int (lambda): " << i << std::endl;
-    i.apply ( cube );
-    std::cout << "cube Int: " << i << std::endl;
-
-    std::cout << "//================================" << std::endl;
-    std::cout << "//================================" << std::endl;
-    std::cout << "//================================" << std::endl;
-
-    //assign heap primitives
+    // Assign heap primitives
     Numeric<float> ft ( 2.0f );
-    Numeric<double> dt ( 2 );
+    Numeric<double> dt ( 2.0 );
     Numeric<int> it ( 2 ) ;
 
     std::cout << "FloatType add result=" << ( ft += 2.0f ) << std::endl;
@@ -1098,7 +746,7 @@ int main()
     it += 100;
     std::cout << "Chain calculation = " << it << std::endl;
 
-    // FloatType object instanciation and method tests
+    // FloatType object instantiation and method tests
     // --------
     ft += 3.0f;
     ft *= 1.5f;
@@ -1106,7 +754,7 @@ int main()
     std::cout << "New value of ft = (ft + 3.0f) * 1.5f / 5.0f = " << ft << std::endl;
     std::cout << "---------------------\n" << std::endl; 
 
-    // DoubleType/IntType object instanciation and method tests
+    // DoubleType/IntType object instantiation and method tests
     // --------
     std::cout << "Initial value of dt: " << dt<< std::endl;
     std::cout << "Initial value of it: " << it << std::endl;
