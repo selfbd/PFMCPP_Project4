@@ -334,13 +334,6 @@ private:
 
 // Primary NumericType template - END ===================================
 
-template<typename NumericType>                                  // #5
-void cube( std::unique_ptr<NumericType>& un )
-{
-    NumericType& i = *un;
-    i = i * i * i;                                              // #8
-}
-
 // Explicit specialization for Double - BEGIN ===========================
 
 template<>                                                      // #6
@@ -392,9 +385,23 @@ private:
 // Explicit specialization for Double - END =============================
 
 // Free Functions - BEGIN ===============================================
-// Free Functions - BEGIN ===============================================
 
-myNumericFreeFunct
+template<typename NumericType>
+void myNumericFreeFunct( std::unique_ptr<NumericType>& un)
+{
+    *un += 7;
+}
+
+template<typename NumericType>                                  // #5
+void cube( std::unique_ptr<NumericType>& un )
+{
+    NumericType& i = *un;
+    i = i * i * i;                                              // #8
+ }
+
+// Free Functions - END =================================================
+
+
 
 
 /*
@@ -990,7 +997,7 @@ void part7()
 
     {
         using FloatType = decltype(ft3);                                         // #4
-        ft3.apply( [&ft3](std::unique_ptr<FloatType::Type>& f ) -> FloatType&
+        ft3.apply( [&ft3]( std::unique_ptr<FloatType::Type>& f ) -> FloatType&
         {
             *f += 7.0f;
             return ft3;
@@ -1008,8 +1015,12 @@ void part7()
     std::cout << "dt3 before: " << dt3 << std::endl;
 
     {
-        using Type = #4;
-        dt3.apply( [](std::unique...){} ); // This calls the templated apply fcn
+        using DoubleType = decltype(dt3); 
+        dt3.apply( [&dt3]( std::unique_ptr<DoubleType::Type>& d ) -> DoubleType& // This calls the templated apply fcn
+        {
+            *d += 6.0;
+            return dt3;
+        });
     }
     
     std::cout << "dt3 after: " << dt3 << std::endl;
@@ -1023,9 +1034,14 @@ void part7()
     std::cout << "it3 before: " << it3 << std::endl;
 
     {
-        using Type = #4;
-        it3.apply( [](std::unique...){} );
+        using IntType = decltype(it3); 
+        it3.apply( [&it3]( std::unique_ptr<IntType::Type>& i ) -> IntType&
+        {
+            *i += 5;
+            return it3;
+        });
     }
+
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "Calling Numeric<int>::apply() twice using a free function (adds 7) and void as return type:" << std::endl;
     std::cout << "it3 before: " << it3 << std::endl;
@@ -1047,7 +1063,7 @@ int main()
     {
         *ui = *ui * *ui;
         return i;
-    });                                                                  // #4
+    });                                                                 // #4
 
     std::cout << "square Int (lambda): " << i << std::endl;
     i.apply ( cube );
@@ -1057,13 +1073,10 @@ int main()
     std::cout << "//================================" << std::endl;
     std::cout << "//================================" << std::endl;
 
-
-
-
     //assign heap primitives
-    FloatType ft ( 2.0f );
-    DoubleType dt ( 2 );
-    IntType it ( 2 ) ;
+    Numeric<float> ft ( 2.0f );
+    Numeric<double> dt ( 2 );
+    Numeric<int> it ( 2 ) ;
 
     std::cout << "FloatType add result=" << ( ft += 2.0f ) << std::endl;
     std::cout << "FloatType subtract result=" << ( ft -= 2.0f ) << std::endl;
