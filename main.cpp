@@ -48,26 +48,27 @@ private:
     Remember the rules about how to define a Template member variable/function outside of the class.
 */
 template <typename NumericType>
-int Temporary<NumericType>::counter = 0;
+int Temporary<NumericType>::counter {0};
 
 /*
  3) You'll need to template your overloaded math operator functions in your Templated Class from Ch5 p04
     use static_cast to convert whatever type is passed in to your template's NumericType before performing the +=, -=, etc.  here's an example implementation:
  */
+
 namespace example
 {
-template<typename NumericType>
-struct Numeric
-{
-    //snip
-    template<typename OtherType>
-    Numeric& operator-=(const OtherType& o) 
-    { 
-        *value -= static_cast<NumericType>(o); 
-        return *this; 
-    }
-    //snip
-};
+    template<typename NumericType>
+    struct Numeric
+    {
+        //snip
+        template<typename OtherType>
+        Numeric& operator-=(const OtherType& o) 
+        { 
+            *value -= static_cast<NumericType>(o); 
+            return *this; 
+        }
+        //snip
+    };
 }
 
 /*
@@ -80,13 +81,13 @@ struct Numeric
     Remove the call to powInternal() and just call std::pow() directly.
     you'll need to static_cast<> the pow() argument the same way you did in the overloaded math operators, when you pass it to std::pow()
  */
+
 /*
  
  6) Finally, your conversion function in your templated class is going to be returning this Temporary, 
         so you should probably NOT return by copy if you want your templated class's owned object to be modified by any math operation.
     See the previous hint for implementing the conversion functions for the Temporary if you want to get the held value
 */
-
 
 /*
  7)   replace main() with the main below
@@ -125,6 +126,8 @@ i cubed: 531441
 
 Use a service like https://www.diffchecker.com/diff to compare your output. 
 */
+
+// New main - BEGIN =================================================================
 
 #include <iostream>
 int main()
@@ -208,50 +211,55 @@ int main()
     }
 }
 
+// New main - END ===================================================================
 
 #include <iostream>
 #include <cmath>
 #include <functional>
 #include <memory>
 
-// Primary NumericType template - BEGIN =================================
-
-template<typename NumericType>                                  // #2
+template<typename NumericType>
 struct Numeric
 {
-    using Type = NumericType;                                   // #3
+    using Type = Temporary<NumericType>;
     Numeric(Type v) : un( std::make_unique<Type>(v) ) { }
     operator Type() const { return *un; }
 
-    Numeric& operator+=(const Type v)
+    operator NumericType() const { return *un;  } 
+    operator NumericType&() { return *un; }
+
+    template<typename OtherType>
+    Numeric& operator+=(const OtherType& o)
     {
-        *un += v;
+        *un += static_cast<NumericType>(o); 
         return *this;
     }
 
-    Numeric& operator-=(const Type v)
+    template<typename OtherType>
+    Numeric& operator-=(const OtherType& o)
     {
-        *un -= v;
+        *un -= static_cast<NumericType>(o); 
         return *this;
     }
 
-    Numeric& operator*=(const Type v)
+    template<typename OtherType>
+    Numeric& operator*=(const OtherType& o)
     {
-        *un *= v;
+        *un *= static_cast<NumericType>(o); 
         return *this;
     }
 
-    template<typename DivisorType>
-    Numeric& operator/=(const DivisorType& v)
+    template<typename OtherType>
+    Numeric& operator/=(const OtherType& o)
     {
         // If struct Numeric template type is int
         if constexpr ( std::is_same<Type, int>::value )
         {
             // If parameter's type is also an int
-            if constexpr ( std::is_same<DivisorType, int>::value )
+            if constexpr ( std::is_same<OtherType, int>::value )
             {
                 // If parameter is 0
-                if (v == 0)
+                if (o == 0)
                 {
                    // Don't do the division 
                    std::cout << "error: integer division by zero is an error and will crash the program!" << std::endl;
@@ -259,7 +267,7 @@ struct Numeric
                 }
             }
             // Else if parameter is less than epsilon
-            else if ( v < std::numeric_limits<DivisorType>::epsilon() )
+            else if ( o < std::numeric_limits<OtherType>::epsilon() )
             {
                 // Don't do the division 
                 std::cout << "can't divide integers by zero!" << std::endl;
@@ -268,13 +276,13 @@ struct Numeric
         }
         // Template type is not an int
         // Else if parameter is less than epsilon
-        else if ( v < std::numeric_limits<Type>::epsilon() )
+        else if ( o < std::numeric_limits<OtherType>::epsilon() )
         {
             // Warn about doing the division 
             std::cout << "warning: floating point division by zero!" << std::endl;
         }
 
-        *un /= v;
+        *un /= static_cast<NumericType>(o); 
         return *this;
     }
 
@@ -292,7 +300,7 @@ struct Numeric
         return *this;
     }
 
-    Numeric& apply( void(*f)(std::unique_ptr<Type>&) )          // #5     
+    Numeric& apply( void(*f)(std::unique_ptr<Type>&) )  
     {
         if( f )
         {
@@ -302,7 +310,7 @@ struct Numeric
     }
 
 private:
-    std::unique_ptr<Type> un;                                   // #1
+    std::unique_ptr<Type> un;
 
     Numeric& powInternal(const Type v)
     {
@@ -388,6 +396,8 @@ void cube( std::unique_ptr<NumericType>& un )
     i = i * i * i;                                              // #8
  }
 
+
+
 // Free Functions - END =================================================
 
 // Point - BEGIN ========================================================
@@ -416,21 +426,8 @@ private:
     float x{0}, y{0};
 };
 
-// Point - END ==========================================================
 
-/*
- MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
-
- Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
- 
- If you didn't already: 
-    Make a pull request after you make your first commit
-    pin the pull request link and this repl.it link to our DM thread in a single message.
-
- send me a DM to review your pull request when the project is ready for review.
-
- Wait for my code review.
- */
+// These can go? BEGIN ==========================================================================
 
 void part3()
 {
@@ -552,63 +549,6 @@ void part4()
     p3.toString();   
     std::cout << "---------------------\n" << std::endl;
 }
-
-/* #0 - BEGIN
-// Free functions for part6
-
-void myFloatFreeFunct (float& floatValue)
-{
-    floatValue += 7.0f;
-}
-
-void myDoubleFreeFunct (double& doubleValue)
-{
-    doubleValue += 6.0;
-}
-
-void myIntFreeFunct (int& intValue)
-{
-    intValue += 5;;
-}
-
-void part6()
-{
-    FloatType ft3(3.0f);
-    DoubleType dt3(4.0);
-    IntType it3(5);
-    
-    std::cout << "Calling FloatType::apply() using a lambda (adds 7.0f) and FloatType as return type:" << std::endl;
-    std::cout << "ft3 before: " << ft3 << std::endl;
-    ft3.apply( [&ft3](float& floatValue) -> FloatType& { floatValue += 7.0f; return ft3; } );
-    std::cout << "ft3 after: " << ft3 << std::endl;
-    std::cout << "Calling FloatType::apply() using a free function (adds 7.0f) and void as return type:" << std::endl;
-    std::cout << "ft3 before: " << ft3 << std::endl;
-    ft3.apply(myFloatFreeFunct);
-    std::cout << "ft3 after: " << ft3 << std::endl;
-    std::cout << "---------------------\n" << std::endl;
-
-    std::cout << "Calling DoubleType::apply() using a lambda (adds 6.0) and DoubleType as return type:" << std::endl;
-    std::cout << "dt3 before: " << dt3 << std::endl;
-    dt3.apply( [&dt3](double& doubleValue) -> DoubleType& { doubleValue += 6.0; return dt3;} );
-    std::cout << "dt3 after: " << dt3 << std::endl;
-    std::cout << "Calling DoubleType::apply() using a free function (adds 6.0) and void as return type:" << std::endl;
-    std::cout << "dt3 before: " << dt3 << std::endl;
-    dt3.apply(myDoubleFreeFunct);
-    std::cout << "dt3 after: " << dt3 << std::endl;
-    std::cout << "---------------------\n" << std::endl;
-
-    std::cout << "Calling IntType::apply() using a lambda (adds 5) and IntType as return type:" << std::endl;
-    std::cout << "it3 before: " << it3 << std::endl;
-    it3.apply( [&it3] (int& intValue) -> IntType& { intValue += 5; return it3; } );
-    std::cout << "it3 after: " << it3 << std::endl;
-    std::cout << "Calling IntType::apply() using a free function (adds 5) and void as return type:" << std::endl;
-    std::cout << "it3 before: " << it3 << std::endl;
-    it3.apply(myIntFreeFunct);
-    std::cout << "it3 after: " << it3 << std::endl;
-    std::cout << "---------------------\n" << std::endl;   
-}
-#0 - END
-*/
 
 void part7()
 {
@@ -737,3 +677,5 @@ int main()
     std::cout << "good to go!\n";
     return 0;
 }
+
+// These can go? END ============================================================================
