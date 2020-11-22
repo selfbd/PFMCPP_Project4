@@ -1,6 +1,6 @@
 /*
-Prject 4: Part 8 / 9
- video: Chapter 5 Part 6 Task 
+Project 4: Part 8 / 9
+Video: Chapter 5 Part 6 Task 
 
 Create a branch named Part8
 
@@ -36,8 +36,8 @@ struct Temporary
      revise these conversion functions to read/write to 'v' here
      hint: what qualifier do read-only functions usually have?
      */
-    operator ___() { /* read-only function */ }
-    operator ___() { /* read/write function */ }
+    operator NumericType() const { return v;  }     /* read-only function */
+    operator NumericType&() { return v; }           /* read/write function */
 private:
     static int counter;
     NumericType v;
