@@ -286,9 +286,11 @@ struct Numeric
         return *this;
     }
 
-    Numeric& pow(const Type& v)
+    template<typename OtherType>
+    Numeric& pow(const OtherType& o)
     {
-        return powInternal( static_cast<Type>(v) );
+        *un = static_cast<Type>( std::pow( *un, static_cast<NumericType>(o) ) );
+        return *this;
     }
 
     template<typename Callable>
@@ -321,12 +323,6 @@ struct Numeric
 
 private:
     std::unique_ptr<Type> un;
-
-    Numeric& powInternal(const Type v)
-    {
-        *un = static_cast<Type>( std::pow(*un, v) );
-        return *this;
-    }
 };
 
 // Primary NumericType template - END ===================================
