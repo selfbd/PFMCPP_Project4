@@ -25,6 +25,7 @@ Create a branch named Part8
 
 #include <iostream>
 #include <typeinfo>
+
 template<typename NumericType>
 struct Temporary
 {
@@ -48,6 +49,7 @@ private:
  2) add the definition of Temporary::counter here, which is a static variable and must be defined outside of the class.
     Remember the rules about how to define a Template member variable/function outside of the class.
 */
+
 template <typename NumericType>
 int Temporary<NumericType>::counter {0};
 
