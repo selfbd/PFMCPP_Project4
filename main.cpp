@@ -128,9 +128,11 @@ template<typename NumericType>
 struct Numeric
 {
     using Type = Temporary<NumericType>;
-    Numeric(Type v) : un( std::make_unique<Type>(v) ) { }
-    operator Type() const { return *un; }
+    Numeric(Type v) : un( std::make_unique<Type>(v) ) {}
+    ~Numeric() = default;
 
+    Numeric(Numeric&& other) : un( std::move(other.v) ) {}
+    
     operator NumericType() const { return *un;  } 
     operator NumericType&() { return *un; }
 
