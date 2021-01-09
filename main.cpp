@@ -69,6 +69,23 @@ i cubed: 531441
 Use a service like https://www.diffchecker.com/diff to compare your output. 
 */
 
+/*
+BDS Notes
+
+The Rule of 5
+-------------
+
+If a class has a user-defined:
+destructor
+copy constructor
+assignment operator...
+
+... the move constructor and
+the move assignment operator
+
+need to be implemented to realize move semantics = more optimized code that can run faster
+*/
+
 #include <iostream>
 #include <typeinfo>
 #include "LeakedObjectDetector.h"
@@ -79,6 +96,16 @@ struct Temporary
     Temporary(NumericType t) : v(t)
     {
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #" << counter++ << std::endl;
+    }
+
+    ~Temporary() = default;
+
+    Temporary(Temporary&& other) : v( std::move(other.v) ) {}
+
+    Temporary& operator=(Temporary&& other)
+    {
+        v = std::move(other.v);
+        return *this;
     }
 
     operator NumericType() const { return v;  }     /* read-only function */
