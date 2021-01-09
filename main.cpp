@@ -11,7 +11,7 @@ Create a branch named Part9
  1) add the Leak Detector files from Project5
  
  2) move these macros after the JUCE_LEAK_DETECTOR macro :
- */
+ 
 
 #define JUCE_DECLARE_NON_COPYABLE(className) \
             className (const className&) = delete;\
@@ -20,7 +20,7 @@ Create a branch named Part9
 #define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
             JUCE_DECLARE_NON_COPYABLE(className) \
             JUCE_LEAK_DETECTOR(className)
-
+*/
 /*
  3) add JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary) to the end of the  Temporary<> struct
  
@@ -86,6 +86,8 @@ struct Temporary
 private:
     static int counter;
     NumericType v;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
 
 template <typename NumericType>
@@ -186,6 +188,8 @@ struct Numeric
 
 private:
     std::unique_ptr<Type> un;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 template<typename NumericType>
