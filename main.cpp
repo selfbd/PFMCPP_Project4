@@ -11,7 +11,7 @@ Create a branch named Part9
  1) add the Leak Detector files from Project5
  
  2) move these macros after the JUCE_LEAK_DETECTOR macro :
- */
+ 
 
 #define JUCE_DECLARE_NON_COPYABLE(className) \
             className (const className&) = delete;\
@@ -20,7 +20,7 @@ Create a branch named Part9
 #define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
             JUCE_DECLARE_NON_COPYABLE(className) \
             JUCE_LEAK_DETECTOR(className)
-
+*/
 /*
  3) add JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary) to the end of the  Temporary<> struct
  
@@ -69,9 +69,9 @@ i cubed: 531441
 Use a service like https://www.diffchecker.com/diff to compare your output. 
 */
 
-
 #include <iostream>
 #include <typeinfo>
+#include "LeakedObjectDetector.h"
 
 template<typename NumericType>
 struct Temporary
@@ -81,11 +81,23 @@ struct Temporary
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #" << counter++ << std::endl;
     }
 
+    ~Temporary() = default;
+
+    Temporary(Temporary&& other) : v( std::move(other.v) ) {}
+
+    Temporary& operator=(Temporary&& other)
+    {
+        v = std::move(other.v);
+        return *this;
+    }
+
     operator NumericType() const { return v;  }     /* read-only function */
     operator NumericType&() { return v; }           /* read/write function */
 private:
     static int counter;
     NumericType v;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
 
 template <typename NumericType>
@@ -99,9 +111,17 @@ template<typename NumericType>
 struct Numeric
 {
     using Type = Temporary<NumericType>;
-    Numeric(Type v) : un( std::make_unique<Type>(v) ) { }
-    operator Type() const { return *un; }
+    Numeric(NumericType v) : un( std::make_unique<Type>(v) ) {}
+    ~Numeric() = default;
 
+    Numeric(Numeric&& other) : un( std::move(other.v) ) {}
+
+    Numeric& operator=(Numeric&& other)
+    {
+        un = std::move(other.v);
+        return *this;
+    }
+    
     operator NumericType() const { return *un;  } 
     operator NumericType&() { return *un; }
 
@@ -186,6 +206,8 @@ struct Numeric
 
 private:
     std::unique_ptr<Type> un;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 template<typename NumericType>
