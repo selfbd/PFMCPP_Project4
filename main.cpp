@@ -115,6 +115,12 @@ struct Numeric
     ~Numeric() = default;
 
     Numeric(Numeric&& other) : un( std::move(other.v) ) {}
+
+    Numeric& operator=( Numeric&& other)
+    {
+        un = std::move(other.v);
+        return *this;
+    }
     
     operator NumericType() const { return *un;  } 
     operator NumericType&() { return *un; }
