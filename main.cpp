@@ -116,7 +116,7 @@ struct Numeric
 
     Numeric(Numeric&& other) : un( std::move(other.v) ) {}
 
-    Numeric& operator=( Numeric&& other)
+    Numeric& operator=(Numeric&& other)
     {
         un = std::move(other.v);
         return *this;
